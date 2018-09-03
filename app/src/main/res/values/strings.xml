@@ -1,0 +1,9 @@
+<resources>
+    <!-- Globals -->
+    <string name="app_name">Music Player</string>
+
+    <string name="app_producer">OxygenApp</string>
+
+    <!-- Images Descriptions -->
+    <string name="launcher_image_description">Music Player Logo</string>
+</resources>
