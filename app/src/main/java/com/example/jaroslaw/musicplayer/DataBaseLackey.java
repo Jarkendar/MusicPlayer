@@ -18,6 +18,9 @@ public class DataBaseLackey extends SQLiteOpenHelper {
     private static final String FIELD_TRACK_PATH = "TRACK_PATH";
     private static final String FIELD_TRACK_LENGTH = "TRACK_LENGTH";
 
+    private static final String INDEX_ON_TRACK_NAME = "INDEX_ON_TRACK_NAME";
+    private static final String INDEX_ON_TRACK_PATH = "INDEX_ON_TRACK_PATH";
+
     public DataBaseLackey(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -29,7 +32,7 @@ public class DataBaseLackey extends SQLiteOpenHelper {
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         super.onDowngrade(db, oldVersion, newVersion);
-        upgradeDataBase(db,oldVersion,newVersion);
+        upgradeDataBase(db, oldVersion, newVersion);
     }
 
     @Override
@@ -42,7 +45,7 @@ public class DataBaseLackey extends SQLiteOpenHelper {
         upgradeDataBase(sqLiteDatabase, oldVersion, newVersion);
     }
 
-    private void upgradeDataBase(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion){
+    private void upgradeDataBase(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         if (oldVersion < 1) {
             String tracksCreateQuery = "CREATE TABLE " + TABLE_TRACKS + " (" +
                     FIELD_ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -51,7 +54,17 @@ public class DataBaseLackey extends SQLiteOpenHelper {
                     FIELD_TRACK_LENGTH + " LONG NOT NULL" +
                     ");";
             sqLiteDatabase.execSQL(tracksCreateQuery);
-            Log.d(TAG, "upgradeDataBase: "+tracksCreateQuery);
+            Log.d(TAG, "upgradeDataBase: " + tracksCreateQuery);
+            String indexOnNameQuery = "CREATE INDEX " + INDEX_ON_TRACK_NAME +
+                    " ON " + TABLE_TRACKS + "(" + FIELD_TRACK_NAME +
+                    ");";
+            sqLiteDatabase.execSQL(indexOnNameQuery);
+            Log.d(TAG, "upgradeDataBase: " + indexOnNameQuery);
+            String indexOnPathQuery = "CREATE INDEX " + INDEX_ON_TRACK_PATH +
+                    " ON " + TABLE_TRACKS + "(" + FIELD_TRACK_PATH +
+                    ");";
+            sqLiteDatabase.execSQL(indexOnPathQuery);
+            Log.d(TAG, "upgradeDataBase: " + indexOnPathQuery);
         }
     }
 }
