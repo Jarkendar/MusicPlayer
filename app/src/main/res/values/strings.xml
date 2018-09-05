@@ -3,6 +3,11 @@
     <string name="app_name">Music Player</string>
 
     <string name="app_producer">OxygenApp</string>
+    <string name="true_tag">true</string>
+    <string name="false_tag">false</string>
+    <string name="queue_tag">queue</string>
+    <string name="random_tag">random</string>
+    <string name="index_tag">index</string>
 
     <!-- Images Descriptions -->
     <string name="launcher_image_description">Music Player Logo</string>
