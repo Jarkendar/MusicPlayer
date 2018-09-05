@@ -6,4 +6,11 @@
 
     <!-- Images Descriptions -->
     <string name="launcher_image_description">Music Player Logo</string>
+    <string name="play_or_pause_circle_description">Play or pause</string>
+    <string name="next_song_description">Next song</string>
+    <string name="previous_song_description">Previous song</string>
+    <string name="change_mode_description">Change mode to random</string>
+    <string name="change_mode_random_description">Change mode to index random</string>
+    <string name="change_mode_index_random_description">Change mode to queue</string>
+    <string name="repeat_mode_description">Repeat current song</string>
 </resources>
