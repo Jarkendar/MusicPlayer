@@ -3,6 +3,11 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Material.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:background">@color/colorBlackBackground</item>
+        <item name="android:textColor">@color/colorWhiteText</item>
+        <item name="android:colorPrimary">@color/primary_material_dark</item>
+        <item name="android:colorBackground">@color/background_material_light</item>
+
     </style>
 
 </resources>
