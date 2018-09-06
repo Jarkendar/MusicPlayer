@@ -18,4 +18,9 @@
     <string name="change_mode_random_description">Change mode to index random</string>
     <string name="change_mode_index_random_description">Change mode to queue</string>
     <string name="repeat_mode_description">Repeat current song</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Tabs titles -->
+    <string name="played_tab">Played</string>
 </resources>

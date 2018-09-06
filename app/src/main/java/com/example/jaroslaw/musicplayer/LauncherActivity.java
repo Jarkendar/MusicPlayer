@@ -15,19 +15,19 @@ public class LauncherActivity extends Activity {
 
         this.getActionBar().hide();
 
-        Intent intent = new Intent(this, PlayerActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         waitAndRun(intent);
     }
 
-    private void waitAndRun(final Intent intent){
-        Thread thread = new Thread(){
+    private void waitAndRun(final Intent intent) {
+        Thread thread = new Thread() {
             @Override
             public void run() {
                 try {
                     sleep(DISPLAY_TIME);
-                }catch (InterruptedException e){
+                } catch (InterruptedException e) {
                     e.printStackTrace();
-                }finally {
+                } finally {
                     startActivity(intent);
                     finish();
                 }
