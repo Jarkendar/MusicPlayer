@@ -32,6 +32,7 @@ public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.titleText.setText(mValues.get(position).getTitle());
+        holder.artistText.setText(mValues.get(position).getArtist());
         holder.durationText.setText(mValues.get(position).getDuration());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -52,6 +53,7 @@ public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecy
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView titleText;
+        public final TextView artistText;
         public final TextView durationText;
         public Track mItem;
 
@@ -59,6 +61,7 @@ public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecy
             super(view);
             mView = view;
             titleText = (TextView) view.findViewById(R.id.item_title);
+            artistText = (TextView) view.findViewById(R.id.item_artist);
             durationText = (TextView) view.findViewById(R.id.item_duration);
         }
 
