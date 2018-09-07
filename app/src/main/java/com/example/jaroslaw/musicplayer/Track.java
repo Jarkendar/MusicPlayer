@@ -12,7 +12,7 @@ public class Track {
         this.title = title;
         this.data = data;
         this.displayName = displayName;
-        this.duration = duration /(60*1000)+":"+ duration %(60*1000)/1000;
+        this.duration = duration /(60*1000)+":"+ (duration %(60*1000)/1000 < 10 ? "0"+duration %(60*1000)/1000 : duration %(60*1000)/1000);
     }
 
     public String getArtist() {
