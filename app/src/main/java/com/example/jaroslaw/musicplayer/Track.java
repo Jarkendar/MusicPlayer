@@ -1,33 +1,48 @@
 package com.example.jaroslaw.musicplayer;
 
 public class Track {
-    private String name;
-    private String path;
-    private String length;
+    private String artist;
+    private String title;
+    private String data;
+    private String displayName;
+    private String duration;
 
-    public Track(String name, String path, long length) {
-        this.name = name;
-        this.path = path;
-        this.length = length/(60*1000)+":"+length%(60*1000)/1000;
+    public Track(String artist, String title, String data, String displayName, long duration) {
+        this.artist = artist;
+        this.title = title;
+        this.data = data;
+        this.displayName = displayName;
+        this.duration = duration /(60*1000)+":"+ duration %(60*1000)/1000;
     }
 
-    public String getName() {
-        return name;
+    public String getArtist() {
+        return artist;
     }
 
-    public String getPath() {
-        return path;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public String getLength() {
-        return length;
+    public String getTitle() {
+        return title;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public String getDuration() {
+        return duration;
     }
 
     @Override
     public String toString() {
         return "Track{" +
-                "name='" + name + '\'' +
-                ", length='" + length + '\'' +
+                "artist='" + artist + '\'' +
+                ", title='" + title + '\'' +
+                ", data='" + data + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", duration='" + duration + '\'' +
                 '}';
     }
 }

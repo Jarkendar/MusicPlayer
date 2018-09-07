@@ -157,14 +157,13 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
                 selection,
                 null,
                 null);
-        LinkedList<String> songs = new LinkedList<>();
+        LinkedList<Track> songs = new LinkedList<>();
         while(cursor.moveToNext()) {
-            songs.add(cursor.getString(0) + "||"
-                    + cursor.getString(1) + "||"
-                    + cursor.getString(2) + "||"
-                    + cursor.getString(3) + "||"
-                    + cursor.getString(4) + "||"
-                    + cursor.getString(5));
+            songs.add(new Track(cursor.getString(1)
+                    , cursor.getString(2)
+                    , cursor.getString(3)
+                    , cursor.getString(4)
+                    , cursor.getLong(5)));
         }
         Log.d(TAG, "readMusicFiles: " + Arrays.toString(songs.toArray()));
         cursor.close();

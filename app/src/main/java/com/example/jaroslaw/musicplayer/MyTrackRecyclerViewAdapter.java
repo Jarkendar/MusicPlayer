@@ -31,8 +31,8 @@ public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.titleText.setText(mValues.get(position).getName());
-        holder.durationText.setText(mValues.get(position).getLength());
+        holder.titleText.setText(mValues.get(position).getTitle());
+        holder.durationText.setText(mValues.get(position).getDuration());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
