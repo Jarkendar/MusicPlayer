@@ -23,4 +23,5 @@
 
     <!-- Tabs titles -->
     <string name="played_tab">Played</string>
+    <string name="tracks_list_tab">Tracks</string>
 </resources>

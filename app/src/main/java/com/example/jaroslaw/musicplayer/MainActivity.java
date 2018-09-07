@@ -18,9 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.TextView;
-
-public class MainActivity extends Activity implements ActionBar.TabListener, PlayedFragment.OnFragmentInteractionListener {
+public class MainActivity extends Activity implements ActionBar.TabListener, PlayedFragment.OnFragmentInteractionListener, TrackFragment.OnListFragmentInteractionListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -120,6 +118,11 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
         Log.d("URI********", "onFragmentInteraction: " + uri.toString());
     }
 
+    @Override
+    public void onListFragmentInteraction(Uri uri) {
+        Log.d("URI********", "onFragmentInteraction: " + uri.toString());
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -169,6 +172,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
             switch (position) {
                 case 0:
                     return new PlayedFragment();
+                case 1:
+                    return new TrackFragment();
                 default:
                     return new PlayedFragment();
             }
@@ -176,7 +181,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
 
         @Override
         public int getCount() {
-            return 1;
+            return 2;
         }
 
         @Override
@@ -184,6 +189,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
             switch (position) {
                 case 0:
                     return getString(R.string.played_tab);
+                case 1:
+                    return getString(R.string.tracks_list_tab);
             }
             return null;
         }
