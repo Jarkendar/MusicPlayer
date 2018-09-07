@@ -26,6 +26,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
 
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     private static final String TAG = "******";
+    private TrackFragment trackFragment;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -84,6 +85,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
 
     private void mayReadMusicFiles(){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
+            trackFragment.refresh();
         }
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -106,6 +108,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
                 // result of the request.
             }
         } else {
+            trackFragment.refresh();
             // Permission has already been granted
         }
     }
@@ -116,7 +119,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
             case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) { ;
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    trackFragment.refresh();
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                 } else {
@@ -228,7 +232,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
                 case 0:
                     return new PlayedFragment();
                 case 1:
-                    return new TrackFragment();
+                    trackFragment = new TrackFragment();
+                    return trackFragment;
                 default:
                     return new PlayedFragment();
             }

@@ -1,11 +1,14 @@
 package com.example.jaroslaw.musicplayer;
 
+import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +33,7 @@ public class TrackFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private RecyclerView recyclerView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -65,7 +69,7 @@ public class TrackFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
@@ -76,35 +80,44 @@ public class TrackFragment extends Fragment {
         return view;
     }
 
+    public void refresh(){
+        recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
     private LinkedList<Track> readMusicFiles(){//todo change Track to this projections
-        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+        if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+            String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
 
-        String[] projection = {
-                MediaStore.Audio.Media._ID,
-                MediaStore.Audio.Media.ARTIST,
-                MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media.DISPLAY_NAME,
-                MediaStore.Audio.Media.DURATION
-        };
+            String[] projection = {
+                    MediaStore.Audio.Media._ID,
+                    MediaStore.Audio.Media.ARTIST,
+                    MediaStore.Audio.Media.TITLE,
+                    MediaStore.Audio.Media.DATA,
+                    MediaStore.Audio.Media.DISPLAY_NAME,
+                    MediaStore.Audio.Media.DURATION
+            };
 
-        Cursor cursor = getActivity().getContentResolver().query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                projection,
-                selection,
-                null,
-                null);
-        LinkedList<Track> songs = new LinkedList<>();
-        while(cursor.moveToNext()) {
-            songs.add(new Track(cursor.getString(1)
-                    , cursor.getString(2)
-                    , cursor.getString(3)
-                    , cursor.getString(4)
-                    , cursor.getLong(5)));
+            Cursor cursor = getActivity().getContentResolver().query(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    selection,
+                    null,
+                    null);
+            LinkedList<Track> songs = new LinkedList<>();
+            while (cursor.moveToNext()) {
+                songs.add(new Track(cursor.getString(1)
+                        , cursor.getString(2)
+                        , cursor.getString(3)
+                        , cursor.getString(4)
+                        , cursor.getLong(5)));
+            }
+            Log.d("*****", "readMusicFiles: " + Arrays.toString(songs.toArray()));
+            cursor.close();
+            return songs;
         }
-        Log.d("*****", "readMusicFiles: " + Arrays.toString(songs.toArray()));
-        cursor.close();
-        return songs;
+        return new LinkedList<>();
     }
 
     @Override

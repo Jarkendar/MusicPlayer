@@ -13,7 +13,7 @@ import java.util.List;
 
 public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Track> mValues;
+    private List<Track> mValues;
     private final OnListFragmentInteractionListener mListener;
 
     public MyTrackRecyclerViewAdapter(List<Track> items, OnListFragmentInteractionListener listener) {
