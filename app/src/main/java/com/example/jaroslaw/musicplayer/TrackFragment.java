@@ -1,16 +1,20 @@
 package com.example.jaroslaw.musicplayer;
 
+import android.app.Fragment;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.provider.MediaStore;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
@@ -67,11 +71,41 @@ public class TrackFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyTrackRecyclerViewAdapter(new LinkedList<Track>() /*todo read tracks from database*/, mListener));
+            recyclerView.setAdapter(new MyTrackRecyclerViewAdapter(readMusicFiles() /*todo read tracks from database*/, mListener));
         }
         return view;
     }
 
+    private LinkedList<Track> readMusicFiles(){//todo change Track to this projections
+        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+
+        String[] projection = {
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DISPLAY_NAME,
+                MediaStore.Audio.Media.DURATION
+        };
+
+        Cursor cursor = getActivity().getContentResolver().query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                selection,
+                null,
+                null);
+        LinkedList<Track> songs = new LinkedList<>();
+        while(cursor.moveToNext()) {
+            songs.add(new Track(cursor.getString(1)
+                    , cursor.getString(2)
+                    , cursor.getString(3)
+                    , cursor.getString(4)
+                    , cursor.getLong(5)));
+        }
+        Log.d("*****", "readMusicFiles: " + Arrays.toString(songs.toArray()));
+        cursor.close();
+        return songs;
+    }
 
     @Override
     public void onAttach(Context context) {

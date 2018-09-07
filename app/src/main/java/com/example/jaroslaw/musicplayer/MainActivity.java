@@ -8,11 +8,9 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -23,9 +21,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.Arrays;
-import java.util.LinkedList;
 
 public class MainActivity extends Activity implements ActionBar.TabListener, PlayedFragment.OnFragmentInteractionListener, TrackFragment.OnListFragmentInteractionListener {
 
@@ -89,7 +84,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
 
     private void mayReadMusicFiles(){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
-            readMusicFiles();
         }
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -112,7 +106,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
                 // result of the request.
             }
         } else {
-            readMusicFiles();
             // Permission has already been granted
         }
     }
@@ -123,8 +116,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
             case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    readMusicFiles();
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) { ;
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                 } else {
@@ -137,36 +129,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
             // other 'case' lines to check for other
             // permissions this app might request.
         }
-    }
-
-    private void readMusicFiles(){//todo change Track to this projections
-        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
-
-        String[] projection = {
-                MediaStore.Audio.Media._ID,
-                MediaStore.Audio.Media.ARTIST,
-                MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.DATA,
-                MediaStore.Audio.Media.DISPLAY_NAME,
-                MediaStore.Audio.Media.DURATION
-        };
-
-        Cursor cursor = getContentResolver().query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                projection,
-                selection,
-                null,
-                null);
-        LinkedList<Track> songs = new LinkedList<>();
-        while(cursor.moveToNext()) {
-            songs.add(new Track(cursor.getString(1)
-                    , cursor.getString(2)
-                    , cursor.getString(3)
-                    , cursor.getString(4)
-                    , cursor.getLong(5)));
-        }
-        Log.d(TAG, "readMusicFiles: " + Arrays.toString(songs.toArray()));
-        cursor.close();
     }
 
     @Override
