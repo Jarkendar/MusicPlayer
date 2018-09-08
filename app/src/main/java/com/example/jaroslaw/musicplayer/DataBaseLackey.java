@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -75,7 +75,7 @@ public class DataBaseLackey extends SQLiteOpenHelper {
         }
     }
 
-    public void updateTableTracks(SQLiteDatabase sqLiteDatabase, LinkedList<Track> tracks){
+    public void updateTableTracks(SQLiteDatabase sqLiteDatabase, List<Track> tracks){
         Cursor cursor = sqLiteDatabase.query(TABLE_TRACKS, new String[]{FIELD_DATA},null, null,null,null, FIELD_DATA);
         Map<String, AtomicInteger> content = new HashMap<>();
         while (cursor.moveToNext()){
