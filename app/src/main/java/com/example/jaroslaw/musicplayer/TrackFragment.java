@@ -75,7 +75,7 @@ public class TrackFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyTrackRecyclerViewAdapter(readMusicFiles() /*todo read tracks from database*/, mListener));
+            recyclerView.setAdapter(new MyTrackRecyclerViewAdapter(readMusicFiles() /*todo read tracks from database*/, mListener, context));
         }
         return view;
     }
