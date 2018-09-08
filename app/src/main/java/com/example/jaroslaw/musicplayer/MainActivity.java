@@ -85,7 +85,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
 
     private void mayReadMusicFiles(){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
-            trackFragment.refresh();
+            refreshTrackFragment();
         }
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -98,6 +98,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
 
+                //todo explanation to user
+
             } else {
                 // No explanation needed; request the permission
                 ActivityCompat.requestPermissions(MainActivity.this,
@@ -108,7 +110,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
                 // result of the request.
             }
         } else {
-            trackFragment.refresh();
+            refreshTrackFragment();
             // Permission has already been granted
         }
     }
@@ -120,7 +122,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    trackFragment.refresh();
+                    refreshTrackFragment();
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                 } else {
@@ -132,6 +134,12 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
 
             // other 'case' lines to check for other
             // permissions this app might request.
+        }
+    }
+
+    private void refreshTrackFragment(){
+        if (trackFragment != null){
+            trackFragment.refresh();
         }
     }
 
