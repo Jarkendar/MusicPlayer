@@ -6,12 +6,14 @@ public class Track {
     private String data;
     private String displayName;
     private String duration;
+    private long lDuration;
 
     public Track(String artist, String title, String data, String displayName, long duration) {
         this.artist = artist;
         this.title = title;
         this.data = data;
         this.displayName = displayName;
+        this.lDuration = duration;
         this.duration = duration /(60*1000)+":"+ (duration %(60*1000)/1000 < 10 ? "0"+duration %(60*1000)/1000 : duration %(60*1000)/1000);
     }
 
@@ -33,6 +35,10 @@ public class Track {
 
     public String getDuration() {
         return duration;
+    }
+
+    public long getlDuration() {
+        return lDuration;
     }
 
     @Override

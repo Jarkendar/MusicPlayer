@@ -1,9 +1,16 @@
 package com.example.jaroslaw.musicplayer;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DataBaseLackey extends SQLiteOpenHelper {
 
@@ -70,5 +77,45 @@ public class DataBaseLackey extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(indexOnPathQuery);
             Log.d(TAG, "upgradeDataBase: " + indexOnPathQuery);
         }
+    }
+
+    public void updateTableTracks(SQLiteDatabase sqLiteDatabase, LinkedList<Track> tracks){
+        Cursor cursor = sqLiteDatabase.query(TABLE_TRACKS, new String[]{FIELD_DATA},null, null,null,null, FIELD_DATA);
+        Map<String, AtomicInteger> content = new HashMap<>();
+        while (cursor.moveToNext()){
+            content.put(cursor.getString(0), new AtomicInteger(0));
+        }
+        for (Track track : tracks){
+            if (content.containsKey(track.getData())){
+                content.get(track.getData()).getAndIncrement();
+                tracks.remove(track);
+            }
+        }
+        cursor.close();
+        for (Track track : tracks){
+            insertTrackToDatabase(sqLiteDatabase, track);
+        }
+        for (Map.Entry<String, AtomicInteger> entry : content.entrySet()){
+            if (entry.getValue().get() == 0){
+                deleteTrackFromDatabase(sqLiteDatabase, entry.getKey());
+            }
+        }
+
+    }
+
+    private void insertTrackToDatabase(SQLiteDatabase sqLiteDatabase, Track track){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(FIELD_ARTIST, track.getArtist());
+        contentValues.put(FIELD_TITLE, track.getTitle());
+        contentValues.put(FIELD_DATA, track.getData());
+        contentValues.put(FIELD_DISPLAY_NAME, track.getDisplayName());
+        contentValues.put(FIELD_DURATION, track.getlDuration());
+        sqLiteDatabase.insert(TABLE_TRACKS, null, contentValues);
+        Log.d(TAG, "insertTrackToDatabase: "+contentValues);
+    }
+
+    private void deleteTrackFromDatabase(SQLiteDatabase sqLiteDatabase, String data){
+        sqLiteDatabase.delete(TABLE_TRACKS, FIELD_DATA+"=?", new String[]{data});
+        Log.d(TAG, "deleteTrackFromDatabase: "+data);
     }
 }
