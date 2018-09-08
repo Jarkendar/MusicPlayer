@@ -14,12 +14,14 @@ public class DataBaseLackey extends SQLiteOpenHelper {
 
     private static final String TABLE_TRACKS = "TRACKS";
     private static final String FIELD_ROW_ID = "_id";
-    private static final String FIELD_TRACK_NAME = "TRACK_NAME";
-    private static final String FIELD_TRACK_PATH = "TRACK_PATH";
-    private static final String FIELD_TRACK_LENGTH = "TRACK_LENGTH";
+    private static final String FIELD_ARTIST = "ARTIST";
+    private static final String FIELD_TITLE = "TITLE";
+    private static final String FIELD_DATA = "DATA";
+    private static final String FIELD_DISPLAY_NAME = "DISPLAY_NAME";
+    private static final String FIELD_DURATION = "DURATION";
 
-    private static final String INDEX_ON_TRACK_NAME = "INDEX_ON_TRACK_NAME";
-    private static final String INDEX_ON_TRACK_PATH = "INDEX_ON_TRACK_PATH";
+    private static final String INDEX_ON_TITLE = "INDEX_ON_TITLE";
+    private static final String INDEX_ON_DATA = "INDEX_ON_DATA";
 
     public DataBaseLackey(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -49,19 +51,21 @@ public class DataBaseLackey extends SQLiteOpenHelper {
         if (oldVersion < 1) {
             String tracksCreateQuery = "CREATE TABLE " + TABLE_TRACKS + " (" +
                     FIELD_ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    FIELD_TRACK_NAME + " TEXT NOT NULL, " +
-                    FIELD_TRACK_PATH + " TEXT UNIQUE, " +
-                    FIELD_TRACK_LENGTH + " LONG NOT NULL" +
+                    FIELD_ARTIST + " TEXT NULL," +
+                    FIELD_TITLE + " TEXT NOT NULL, " +
+                    FIELD_DATA + " TEXT UNIQUE, " +
+                    FIELD_DISPLAY_NAME + " TEXT NULL," +
+                    FIELD_DURATION + " LONG NOT NULL" +
                     ");";
             sqLiteDatabase.execSQL(tracksCreateQuery);
             Log.d(TAG, "upgradeDataBase: " + tracksCreateQuery);
-            String indexOnNameQuery = "CREATE INDEX " + INDEX_ON_TRACK_NAME +
-                    " ON " + TABLE_TRACKS + "(" + FIELD_TRACK_NAME +
+            String indexOnNameQuery = "CREATE INDEX " + INDEX_ON_TITLE +
+                    " ON " + TABLE_TRACKS + "(" + FIELD_TITLE +
                     ");";
             sqLiteDatabase.execSQL(indexOnNameQuery);
             Log.d(TAG, "upgradeDataBase: " + indexOnNameQuery);
-            String indexOnPathQuery = "CREATE INDEX " + INDEX_ON_TRACK_PATH +
-                    " ON " + TABLE_TRACKS + "(" + FIELD_TRACK_PATH +
+            String indexOnPathQuery = "CREATE INDEX " + INDEX_ON_DATA +
+                    " ON " + TABLE_TRACKS + "(" + FIELD_DATA +
                     ");";
             sqLiteDatabase.execSQL(indexOnPathQuery);
             Log.d(TAG, "upgradeDataBase: " + indexOnPathQuery);
