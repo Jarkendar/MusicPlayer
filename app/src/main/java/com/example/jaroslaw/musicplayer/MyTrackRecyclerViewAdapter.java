@@ -45,6 +45,14 @@ public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecy
         });
     }
 
+    public List<Track> getmValues() {
+        return mValues;
+    }
+
+    public void setmValues(List<Track> mValues) {
+        this.mValues = mValues;
+    }
+
     @Override
     public int getItemCount() {
         return mValues.size();

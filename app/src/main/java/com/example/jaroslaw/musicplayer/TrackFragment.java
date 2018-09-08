@@ -81,10 +81,15 @@ public class TrackFragment extends Fragment {
     }
 
     public void refresh(){
+        ((MyTrackRecyclerViewAdapter)recyclerView.getAdapter()).setmValues(readMusicFiles());
         recyclerView.getAdapter().notifyDataSetChanged();
+        DataBaseLackey dataBaseLackey = new DataBaseLackey(getActivity().getApplicationContext());
+        synchronized (getActivity().getApplicationContext()){
+            dataBaseLackey.updateTableTracks(dataBaseLackey.getWritableDatabase(), ((MyTrackRecyclerViewAdapter)recyclerView.getAdapter()).getmValues());
+        }
     }
 
-    private LinkedList<Track> readMusicFiles(){//todo change Track to this projections
+    private LinkedList<Track> readMusicFiles(){
         if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
