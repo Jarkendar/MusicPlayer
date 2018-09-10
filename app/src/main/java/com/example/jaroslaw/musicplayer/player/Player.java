@@ -6,6 +6,7 @@ import android.media.MediaPlayer;
 import com.example.jaroslaw.musicplayer.DataBaseLackey;
 import com.example.jaroslaw.musicplayer.Track;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.logging.Handler;
@@ -99,6 +100,20 @@ public class Player implements IPlayer {
 
     @Override
     public void chooseAndPlay(String path) {
+        mediaPlayer.stop();
+        mediaPlayer.reset();
+        try {
+            mediaPlayer.setDataSource(path);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+            prepareQueueNextSongs();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void pause() {
 
     }
 
@@ -148,6 +163,10 @@ public class Player implements IPlayer {
 
     @Override
     public void getListPlayed() {
+
+    }
+
+    private void saveCurrentState(){
 
     }
 }
