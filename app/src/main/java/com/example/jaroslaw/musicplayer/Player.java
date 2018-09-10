@@ -8,14 +8,17 @@ import java.util.logging.Handler;
 
 public class Player implements IPlayer {
 
+    private static final int NUMBER_OF_NEXT_SONGS = 10;
+
     private Context context;
+    private LinkedList<Track> allTracks;//todo think about load this list in constructor
     private DataBaseLackey dataBaseLackey; //todo new table for list play
     private LinkedList<Track> willBePlayed;//todo 10 songs
     private Track currentPlay;
     private LinkedList<Track> history;// todo 50 songs
     private Mode mode = Mode.QUEUE;
     private MediaPlayer mediaPlayer;
-    private Handler handler;
+    private Handler handler;//todo at the end
 
     public Player(Context context) {
         this.context = context;
