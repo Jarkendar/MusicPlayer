@@ -26,24 +26,52 @@ public class Player implements IPlayer {
         prepareMediaPlayer();
     }
 
-    private void prepareMediaPlayer(){
+    private void prepareMediaPlayer() {
         mediaPlayer = new MediaPlayer();
     }
 
-    private void prepareQueueNextSongs(){
-        switch (mode){
-            case QUEUE:{
+    private synchronized void prepareQueueNextSongs() {
+        switch (mode) {
+            case QUEUE: {
+                willBePlayed = createQueueSongsList();
+                break;
+            }
+            case RANDOM: {
 
                 break;
             }
-            case RANDOM:{
-
+            case INDEX_RANDOM: {
+                //todo in future
                 break;
             }
-            case INDEX_RANDOM:{
+        }
+    }
 
-                break;
+    private LinkedList<Track> createQueueSongsList() {
+        int startIndex = allTracks.indexOf(currentPlay) + 1;//+1 because i not want to current song
+        if (startIndex == 0) {
+            return new LinkedList<>();
+        } else if (allTracks.size() != 0 && allTracks.size() < NUMBER_OF_NEXT_SONGS) {
+            LinkedList<Track> list = new LinkedList<>();
+            for (int i = 0, currentIndex = startIndex; i < NUMBER_OF_NEXT_SONGS; ++i) {
+                if (currentIndex == allTracks.size()) {
+                    currentIndex = 0;
+                    list.add(allTracks.get(currentIndex));
+                } else {
+                    list.add(allTracks.get(currentIndex));
+                }
+                currentIndex++;
             }
+            return list;
+        } else if (startIndex + NUMBER_OF_NEXT_SONGS < allTracks.size()) {
+            return new LinkedList<>(allTracks.subList(startIndex, startIndex + NUMBER_OF_NEXT_SONGS));
+        } else if (startIndex + NUMBER_OF_NEXT_SONGS >= allTracks.size()) {
+            int onStart = NUMBER_OF_NEXT_SONGS - (allTracks.size() - startIndex);
+            LinkedList<Track> list = new LinkedList<>(allTracks.subList(startIndex, allTracks.size()));
+            list.addAll(new LinkedList<>(allTracks.subList(0, onStart)));
+            return list;
+        } else {
+            return new LinkedList<>();
         }
     }
 
@@ -79,16 +107,16 @@ public class Player implements IPlayer {
 
     @Override
     public void changeMode() {
-        switch (mode){
-            case QUEUE:{
+        switch (mode) {
+            case QUEUE: {
                 mode = Mode.RANDOM;
                 break;
             }
-            case RANDOM:{
+            case RANDOM: {
                 mode = Mode.INDEX_RANDOM;
                 break;
             }
-            case INDEX_RANDOM:{
+            case INDEX_RANDOM: {
                 mode = Mode.QUEUE;
                 break;
             }
