@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.logging.Handler;
 
 public class Player implements IPlayer {
@@ -37,7 +38,7 @@ public class Player implements IPlayer {
                 break;
             }
             case RANDOM: {
-
+                willBePlayed = createRandomSongsList();
                 break;
             }
             case INDEX_RANDOM: {
@@ -72,6 +73,19 @@ public class Player implements IPlayer {
             return list;
         } else {
             return new LinkedList<>();
+        }
+    }
+
+    private LinkedList<Track> createRandomSongsList(){
+        if (allTracks.size() == 0){
+            return new LinkedList<>();
+        }else {
+            Random random = new Random(System.currentTimeMillis());
+            LinkedList<Track> list = new LinkedList<>();
+            for (int i = 0; i<NUMBER_OF_NEXT_SONGS; ++i){
+                list.add(allTracks.get(random.nextInt(allTracks.size())));
+            }
+            return list;
         }
     }
 
