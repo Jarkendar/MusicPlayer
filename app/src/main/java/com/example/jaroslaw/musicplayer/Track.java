@@ -7,6 +7,7 @@ public class Track {
     private String displayName;
     private String duration;
     private long durationTime;
+    private long currentDuration;
 
     public Track(String artist, String title, String data, String displayName, long duration) {
         this.artist = artist;
@@ -14,7 +15,12 @@ public class Track {
         this.data = data;
         this.displayName = displayName;
         this.durationTime = duration;
-        this.duration = duration /(60*1000)+":"+ (duration %(60*1000)/1000 < 10 ? "0"+duration %(60*1000)/1000 : duration %(60*1000)/1000);
+        this.duration = duration / (60 * 1000) + ":" + (duration % (60 * 1000) / 1000 < 10 ? "0" + duration % (60 * 1000) / 1000 : duration % (60 * 1000) / 1000);
+    }
+
+    public Track(String artist, String title, String data, String displayName, long duration, long currentDuration) {
+        this(artist, title, data, displayName, duration);
+        this.currentDuration = currentDuration;
     }
 
     public String getArtist() {
@@ -41,6 +47,10 @@ public class Track {
         return durationTime;
     }
 
+    public long getCurrentDuration(){
+        return currentDuration;
+    }
+
     @Override
     public String toString() {
         return "Track{" +
@@ -49,6 +59,8 @@ public class Track {
                 ", data='" + data + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", duration='" + duration + '\'' +
+                ", durationTime=" + durationTime +
+                ", currentDuration=" + currentDuration +
                 '}';
     }
 }
