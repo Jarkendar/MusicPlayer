@@ -105,7 +105,7 @@ public class DataBaseLackey extends SQLiteOpenHelper {
         contentValues.put(FIELD_TITLE, track.getTitle());
         contentValues.put(FIELD_DATA, track.getData());
         contentValues.put(FIELD_DISPLAY_NAME, track.getDisplayName());
-        contentValues.put(FIELD_DURATION, track.getlDuration());
+        contentValues.put(FIELD_DURATION, track.getDurationTime());
         sqLiteDatabase.insert(TABLE_TRACKS, null, contentValues);
         Log.d(TAG, "insertTrackToDatabase: "+contentValues);
     }
