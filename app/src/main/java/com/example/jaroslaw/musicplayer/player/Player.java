@@ -1,7 +1,10 @@
-package com.example.jaroslaw.musicplayer;
+package com.example.jaroslaw.musicplayer.player;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+
+import com.example.jaroslaw.musicplayer.DataBaseLackey;
+import com.example.jaroslaw.musicplayer.Track;
 
 import java.util.LinkedList;
 import java.util.Random;

@@ -1,4 +1,4 @@
-package com.example.jaroslaw.musicplayer;
+package com.example.jaroslaw.musicplayer.player;
 
 public enum Mode {
     QUEUE,
