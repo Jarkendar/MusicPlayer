@@ -1,5 +1,7 @@
 package com.example.jaroslaw.musicplayer.player;
 
+import java.util.LinkedList;
+
 public interface IPlayer {
     public void start();
     public void chooseAndPlay(String path);
@@ -9,6 +11,6 @@ public interface IPlayer {
     public void previous();
     public void refreshSong();
     public void changeMode();
-    public void getShortListPlayed();
-    public void getListPlayed();
+    public LinkedList getShortListPlayed();
+    public LinkedList getListPlayed();
 }
