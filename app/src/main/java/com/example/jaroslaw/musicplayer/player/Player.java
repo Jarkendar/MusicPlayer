@@ -118,6 +118,7 @@ public class Player implements IPlayer {
             e.printStackTrace();
         }
         saveCurrentState();
+        prepareNextSong();
     }
 
     private Track getSongFromList(String path){
@@ -171,6 +172,7 @@ public class Player implements IPlayer {
             }
         }
         prepareQueueNextSongs();
+        prepareNextSong();
     }
 
     @Override
@@ -207,6 +209,17 @@ public class Player implements IPlayer {
                 //todo in future
                 break;
             }
+        }
+    }
+
+    private void prepareNextSong(){
+        MediaPlayer next = new MediaPlayer();
+        try {
+            next.setDataSource(willBePlayed.getFirst().getData());
+            next.prepare();
+            mediaPlayer.setNextMediaPlayer(next);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
