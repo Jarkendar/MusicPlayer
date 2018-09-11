@@ -155,7 +155,21 @@ public class Player implements IPlayer {
 
     @Override
     public void next() {
-
+        if (mediaPlayer.isPlaying()){
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+        }
+        addTrackToHistory(currentPlay);
+        currentPlay = willBePlayed.getFirst();
+        generateNextSong();
+        try {
+            mediaPlayer.setDataSource(currentPlay.getData());
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        saveCurrentState();
     }
 
     @Override
