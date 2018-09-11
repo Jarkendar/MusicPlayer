@@ -31,6 +31,7 @@ public class Player implements IPlayer {
         this.context = context;
         dataBaseLackey = new DataBaseLackey(context);
         prepareMediaPlayer();
+        //todo check state, read from db, eventually prepare lists
     }
 
     private void prepareMediaPlayer() {
@@ -97,7 +98,15 @@ public class Player implements IPlayer {
 
     @Override
     public void start() {
-
+        try {
+            mediaPlayer.setDataSource(currentPlay.getData());
+            mediaPlayer.seekTo((int)currentPlay.getCurrentDuration());
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        saveCurrentState();
     }
 
     @Override
