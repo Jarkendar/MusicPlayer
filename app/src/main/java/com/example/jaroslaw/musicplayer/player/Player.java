@@ -7,6 +7,7 @@ import com.example.jaroslaw.musicplayer.DataBaseLackey;
 import com.example.jaroslaw.musicplayer.Track;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.logging.Handler;
@@ -173,13 +174,23 @@ public class Player implements IPlayer {
     }
 
     @Override
-    public void getShortListPlayed() {
-
+    public LinkedList<Track> getShortListPlayed() {//current song and 2-3 next
+        LinkedList<Track> list = new LinkedList<>();
+        list.addLast(currentPlay);
+        list.addLast(willBePlayed.get(0));
+        list.addLast(willBePlayed.get(1));
+        list.addLast(willBePlayed.get(2));
+        return list;
     }
 
     @Override
-    public void getListPlayed() {
-
+    public LinkedList<Track> getListPlayed() {//full list {history.reverse,  current, next}
+        LinkedList<Track> list = new LinkedList<>();
+        list.addAll(history);
+        Collections.reverse(list);
+        list.addLast(currentPlay);
+        list.addAll(list.size(), willBePlayed);
+        return list;
     }
 
     private void generateNextSong(){
