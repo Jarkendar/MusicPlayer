@@ -16,6 +16,7 @@ public class Player implements IPlayer {
 
     private static final int NUMBER_OF_NEXT_SONGS = 10;
     private static final int NUMBER_OF_HISTORY_SONGS = 50;
+    private static final int FIRST_FIFTH_SECONDS = 5 * 1000;
 
     private Context context;
     private LinkedList<Track> allTracks;//todo think about load this list in constructor
@@ -161,6 +162,7 @@ public class Player implements IPlayer {
         }
         addTrackToHistory(currentPlay);
         currentPlay = willBePlayed.getFirst();
+        willBePlayed.removeFirst();
         generateNextSong();
         try {
             mediaPlayer.setDataSource(currentPlay.getData());
@@ -174,7 +176,32 @@ public class Player implements IPlayer {
 
     @Override
     public void previous() {
-
+        int currentPosition = 0;
+        if (mediaPlayer.isPlaying()){
+            currentPosition = mediaPlayer.getCurrentPosition();
+            mediaPlayer.stop();
+        }
+        if (currentPosition > FIRST_FIFTH_SECONDS || history.size() == 0){
+            try {
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            willBePlayed.addFirst(currentPlay);
+            currentPlay = history.getFirst();
+            history.removeFirst();
+            mediaPlayer.reset();
+            try {
+                mediaPlayer.setDataSource(currentPlay.getData());
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        saveCurrentState();
     }
 
     @Override
@@ -222,19 +249,21 @@ public class Player implements IPlayer {
         return list;
     }
 
-    private void generateNextSong(){
-        switch (mode) {
-            case QUEUE: {
-                addNextLastTrackQueue();
-                break;
-            }
-            case RANDOM: {
-                addNextLastTrackRandom();
-                break;
-            }
-            case INDEX_RANDOM: {
-                //todo in future
-                break;
+    private void generateNextSong() {
+        if (willBePlayed.size() < NUMBER_OF_NEXT_SONGS) {
+            switch (mode) {
+                case QUEUE: {
+                    addNextLastTrackQueue();
+                    break;
+                }
+                case RANDOM: {
+                    addNextLastTrackRandom();
+                    break;
+                }
+                case INDEX_RANDOM: {
+                    //todo in future
+                    break;
+                }
             }
         }
     }
