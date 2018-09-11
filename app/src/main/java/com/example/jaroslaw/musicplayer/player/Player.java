@@ -14,6 +14,7 @@ import java.util.logging.Handler;
 public class Player implements IPlayer {
 
     private static final int NUMBER_OF_NEXT_SONGS = 10;
+    private static final int NUMBER_OF_HISTORY_SONGS = 50;
 
     private Context context;
     private LinkedList<Track> allTracks;//todo think about load this list in constructor
@@ -179,6 +180,51 @@ public class Player implements IPlayer {
     @Override
     public void getListPlayed() {
 
+    }
+
+    private void generateNextSong(){
+        switch (mode) {
+            case QUEUE: {
+                addNextLastTrackQueue();
+                break;
+            }
+            case RANDOM: {
+                addNextLastTrackRandom();
+                break;
+            }
+            case INDEX_RANDOM: {
+                //todo in future
+                break;
+            }
+        }
+    }
+
+    private void addNextLastTrackQueue(){
+        Track lastTrack = willBePlayed.getLast();
+        int indextOfLast = allTracks.indexOf(lastTrack);
+        if (allTracks.size() != 0) {
+            if (indextOfLast == allTracks.size() -1){
+                willBePlayed.addLast(allTracks.get(0));
+            }else {
+                willBePlayed.addLast(allTracks.get(indextOfLast+1));
+            }
+        }
+    }
+
+    private void addNextLastTrackRandom() {
+        Random random = new Random(System.currentTimeMillis());
+        if (allTracks.size() != 0) {
+            willBePlayed.addLast(allTracks.get(random.nextInt(allTracks.size())));
+        }
+    }
+
+
+
+    private void addTrackToHistory(Track track){
+        history.addFirst(track);
+        while (history.size() > NUMBER_OF_HISTORY_SONGS){
+            history.removeLast();
+        }
     }
 
     private void saveCurrentState(){
