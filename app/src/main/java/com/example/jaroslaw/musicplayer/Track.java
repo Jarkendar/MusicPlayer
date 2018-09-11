@@ -51,6 +51,10 @@ public class Track {
         return currentDuration;
     }
 
+    public void setCurrentDuration(long currentDuration) {
+        this.currentDuration = currentDuration;
+    }
+
     @Override
     public String toString() {
         return "Track{" +

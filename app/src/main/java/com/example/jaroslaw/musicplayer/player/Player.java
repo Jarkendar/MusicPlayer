@@ -141,7 +141,9 @@ public class Player implements IPlayer {
 
     @Override
     public void pause() {
-
+        mediaPlayer.pause();
+        currentPlay.setCurrentDuration(mediaPlayer.getCurrentPosition());
+        saveCurrentState();
     }
 
     @Override
