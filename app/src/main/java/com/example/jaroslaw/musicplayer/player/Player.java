@@ -150,7 +150,7 @@ public class Player implements IPlayer {
     }
 
     @Override
-    public void refreshSong() {
+    public void setLoopingParam() {
 
     }
 

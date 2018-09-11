@@ -9,7 +9,7 @@ public interface IPlayer {
     public void stop();
     public void next();
     public void previous();
-    public void refreshSong();
+    public void setLoopingParam();
     public void changeMode();
     public LinkedList getShortListPlayed();
     public LinkedList getListPlayed();
