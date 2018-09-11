@@ -100,16 +100,31 @@ public class Player implements IPlayer {
 
     @Override
     public void chooseAndPlay(String path) {
+        Track chosenTrack = getSongFromList(path);
+        if (chosenTrack == null){
+            return;
+        }
         mediaPlayer.stop();
         mediaPlayer.reset();
+        currentPlay = chosenTrack;
         try {
-            mediaPlayer.setDataSource(path);
+            mediaPlayer.setDataSource(currentPlay.getData());
             mediaPlayer.prepare();
             mediaPlayer.start();
             prepareQueueNextSongs();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        saveCurrentState();
+    }
+
+    private Track getSongFromList(String path){
+        for (Track track: allTracks){
+            if (track.getData().equals(path)){
+                return track;
+            }
+        }
+        return null;
     }
 
     @Override
