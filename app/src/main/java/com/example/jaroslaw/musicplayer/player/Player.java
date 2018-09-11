@@ -151,7 +151,7 @@ public class Player implements IPlayer {
 
     @Override
     public void setLoopingParam() {
-
+        mediaPlayer.setLooping(!mediaPlayer.isLooping());
     }
 
     @Override
