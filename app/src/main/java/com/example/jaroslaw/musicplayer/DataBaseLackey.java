@@ -137,6 +137,37 @@ public class DataBaseLackey extends SQLiteOpenHelper {
         Log.d(TAG, "deleteTrackFromDatabase: " + data);
     }
 
+    public void saveState(SQLiteDatabase sqLiteDatabase, PlayerState state){
+        Log.d(TAG, "saveState: "+sqLiteDatabase+" "+state);
+        sqLiteDatabase.beginTransaction();
+        sqLiteDatabase.delete(TABLE_STATE, null, null);
+        Log.d(TAG, "saveState: drop base");
+        for (int i = 0; i<state.getHistory().size(); ++i){
+            sqLiteDatabase.insert(TABLE_STATE, null, createTrackValues(state.getHistory().get(i), STATE_HISTORY, i));
+        }
+        Log.d(TAG, "saveState: insert all history");
+        sqLiteDatabase.insert(TABLE_STATE, null, createTrackValues(state.getCurrent(), STATE_CURRENT, 0));
+        Log.d(TAG, "saveState: insert current");
+        for (int i = 0; i<state.getNext().size(); ++i){
+            sqLiteDatabase.insert(TABLE_STATE, null, createTrackValues(state.getNext().get(i), STATE_NEXT, i));
+        }
+        Log.d(TAG, "saveState: insert all next");
+        sqLiteDatabase.setTransactionSuccessful();
+        sqLiteDatabase.endTransaction();
+    }
+
+    private ContentValues createTrackValues(Track track, String state, int position){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(FIELD_ARTIST, track.getArtist());
+        contentValues.put(FIELD_TITLE, track.getTitle());
+        contentValues.put(FIELD_DATA, track.getData());
+        contentValues.put(FIELD_DISPLAY_NAME, track.getDisplayName());
+        contentValues.put(FIELD_DURATION, track.getDurationTime());
+        contentValues.put(FIELD_STATE, state);
+        contentValues.put(FIELD_POSITION, position);
+        return contentValues;
+    }
+
     public PlayerState readStateFromDatabase(SQLiteDatabase sqLiteDatabase) {
         Log.d(TAG, "readStateFromDatabase: " + sqLiteDatabase);
         Cursor cursor = sqLiteDatabase.query(TABLE_STATE
