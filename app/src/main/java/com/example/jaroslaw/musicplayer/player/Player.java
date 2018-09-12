@@ -40,6 +40,7 @@ public class Player implements IPlayer {
     }
 
     private synchronized void prepareQueueNextSongs() {
+        willBePlayed.clear();
         switch (mode) {
             case QUEUE: {
                 willBePlayed = createQueueSongsList();
