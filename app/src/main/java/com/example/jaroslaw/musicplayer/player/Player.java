@@ -55,6 +55,7 @@ public class Player implements IPlayer {
                 break;
             }
         }
+        saveCurrentState();
     }
 
     private LinkedList<Track> createQueueSongsList() {
