@@ -78,18 +78,14 @@ public class TrackFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyTrackRecyclerViewAdapter(readMusicFiles() /*todo read tracks from database*/, mListener, context));
+            recyclerView.setAdapter(new MyTrackRecyclerViewAdapter(readMusicFiles() /*todo read tracks from database*/, mListener, context, player));
         }
         return view;
     }
 
-    public void refresh(){
-        ((MyTrackRecyclerViewAdapter)recyclerView.getAdapter()).setTracks(readMusicFiles());
+    public void refresh(LinkedList<Track> tracks){
+        ((MyTrackRecyclerViewAdapter)recyclerView.getAdapter()).setTracks(tracks);
         recyclerView.getAdapter().notifyDataSetChanged();
-        DataBaseLackey dataBaseLackey = new DataBaseLackey(getActivity().getApplicationContext());
-        synchronized (getActivity().getApplicationContext()){
-            dataBaseLackey.updateTableTracks(dataBaseLackey.getWritableDatabase(), ((MyTrackRecyclerViewAdapter)recyclerView.getAdapter()).getTracks());
-        }
     }
 
     private LinkedList<Track> readMusicFiles(){

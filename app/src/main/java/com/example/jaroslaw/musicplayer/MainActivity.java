@@ -8,9 +8,12 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -23,6 +26,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.jaroslaw.musicplayer.player.Player;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MainActivity extends Activity implements ActionBar.TabListener, PlayedFragment.OnFragmentInteractionListener, TrackFragment.OnListFragmentInteractionListener {
 
@@ -85,13 +92,19 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
-        mayReadMusicFiles();
         player = new Player(getApplicationContext());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mayReadMusicFiles();
     }
 
     private void mayReadMusicFiles(){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
             refreshTrackFragment();
+            setPlayerList();
         }
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -117,6 +130,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
             }
         } else {
             refreshTrackFragment();
+            setPlayerList();
             // Permission has already been granted
         }
     }
@@ -129,6 +143,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     refreshTrackFragment();
+                    setPlayerList();
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                 } else {
@@ -143,10 +158,53 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
         }
     }
 
+    private LinkedList<Track> readMusicFiles(){
+        if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+            String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+
+            String[] projection = {
+                    MediaStore.Audio.Media._ID,
+                    MediaStore.Audio.Media.ARTIST,
+                    MediaStore.Audio.Media.TITLE,
+                    MediaStore.Audio.Media.DATA,
+                    MediaStore.Audio.Media.DISPLAY_NAME,
+                    MediaStore.Audio.Media.DURATION
+            };
+
+            Cursor cursor = getContentResolver().query(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    selection,
+                    null,
+                    null);
+            LinkedList<Track> songs = new LinkedList<>();
+            while (cursor.moveToNext()) {
+                songs.add(new Track(cursor.getString(1)
+                        , cursor.getString(2)
+                        , cursor.getString(3)
+                        , cursor.getString(4)
+                        , cursor.getLong(5)));
+            }
+            Log.d("*****", "readMusicFiles: " + Arrays.toString(songs.toArray()));
+            cursor.close();
+            return songs;
+        }
+        return new LinkedList<>();
+    }
+
     private void refreshTrackFragment(){
         if (trackFragment != null){
-            trackFragment.refresh();
+            LinkedList<Track> tracks = readMusicFiles();
+            player.setAllTracks(tracks);
+            new BaseRefresher().execute(tracks);
+            trackFragment.refresh(tracks);
         }
+    }
+
+    private void setPlayerList(){
+        player.setAllTracks(readMusicFiles());
     }
 
     @Override
@@ -270,6 +328,18 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
                     return getString(R.string.played_tab);
                 case 1:
                     return getString(R.string.tracks_list_tab);
+            }
+            return null;
+        }
+    }
+
+
+    private class BaseRefresher extends AsyncTask<List<Track>,Void, Void> {
+        @Override
+        protected Void doInBackground(List<Track>... linkedLists) {
+            DataBaseLackey dataBaseLackey = new DataBaseLackey(getApplicationContext());
+            synchronized (getApplicationContext()) {
+                dataBaseLackey.updateTableTracks(dataBaseLackey.getWritableDatabase(), linkedLists[0]);
             }
             return null;
         }
