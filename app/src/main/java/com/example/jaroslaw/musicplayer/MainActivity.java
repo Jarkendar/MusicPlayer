@@ -252,6 +252,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
     @Override
     public void onListFragmentInteraction(Uri uri) {
         Log.d("URI********", "onFragmentInteraction: " + uri.toString());
+        playedFragment.changeOnPlay();
     }
 
     /**

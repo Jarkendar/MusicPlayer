@@ -1,6 +1,7 @@
 package com.example.jaroslaw.musicplayer;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,10 +43,6 @@ public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecy
         holder.durationText.setText(tracks.get(position).getDuration());
     }
 
-    public List<Track> getTracks() {
-        return tracks;
-    }
-
     public void setTracks(List<Track> tracks) {
         this.tracks = tracks;
     }
@@ -75,6 +72,7 @@ public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecy
                 public void onClick(View view) {
                     Log.d("*****", "onClick: "+getAdapterPosition());
                     player.chooseAndPlay(track.getData());
+                    mListener.onListFragmentInteraction( Uri.EMPTY);
                 }
             });
         }

@@ -80,64 +80,79 @@ public class PlayedFragment extends Fragment {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Animation click = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.play_pause_click_anim);
-                view.startAnimation(click);
+                if (playerIsAvailable() && player.getCurrentPlay() != null) {
 
-                if (view.getTag() == getString(R.string.false_tag)) {
-                    ((ImageButton) view).setImageResource(R.drawable.pause_circle);
-                    view.setTag(getString(R.string.true_tag));
-                } else {
-                    ((ImageButton) view).setImageResource(R.drawable.play_circle);
-                    view.setTag(getString(R.string.false_tag));
+                    Animation click = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.play_pause_click_anim);
+                    view.startAnimation(click);
+
+                    if (view.getTag() == getString(R.string.false_tag)) {
+                        ((ImageButton) view).setImageResource(R.drawable.pause_circle);
+                        view.setTag(getString(R.string.true_tag));
+                        player.start();
+                    } else {
+                        ((ImageButton) view).setImageResource(R.drawable.play_circle);
+                        view.setTag(getString(R.string.false_tag));
+                        player.pause();
+                    }
+
+                    Animation load = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.play_pause_load_anim);
+                    view.startAnimation(load);
                 }
-
-                //todo serve play/stop music
-
-                Animation load = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.play_pause_load_anim);
-                view.startAnimation(load);
             }
         });
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                view.startAnimation(getClickAnimation());
-                //todo serve next song
+                if (playerIsAvailable()) {
+                    view.startAnimation(getClickAnimation());
+                    player.next();
+                }
             }
         });
         previousButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                view.startAnimation(getClickAnimation());
-                //todo serve previous song
+                if (playerIsAvailable()) {
+                    view.startAnimation(getClickAnimation());
+                    player.previous();
+                }
             }
         });
         repeatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                view.startAnimation(getClickAnimation());
-                //todo serve repeat
+                if (playerIsAvailable()) {
+                    view.startAnimation(getClickAnimation());
+                    player.setLoopingParam();
+                    //todo change color or image
+                }
             }
         });
         modeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                view.startAnimation(getClickAnimation());
-                int imgId = R.drawable.ic_music_note_half_white_48dp;
-                if (view.getTag() == getString(R.string.queue_tag)) {
-                    imgId = R.drawable.ic_music_note_quarter_white_48dp;
-                    view.setTag(getString(R.string.random_tag));
-                } else if (view.getTag() == getString(R.string.random_tag)) {
-                    imgId = R.drawable.ic_music_note_eighth_white_48dp;
-                    view.setTag(getString(R.string.index_tag));
-                } else if (view.getTag() == getString(R.string.index_tag)) {
-                    imgId = R.drawable.ic_music_note_half_white_48dp;
-                    view.setTag(getString(R.string.queue_tag));
+                if (playerIsAvailable()) {
+                    view.startAnimation(getClickAnimation());
+                    int imgId = R.drawable.ic_music_note_half_white_48dp;
+                    if (view.getTag() == getString(R.string.queue_tag)) {
+                        imgId = R.drawable.ic_music_note_quarter_white_48dp;
+                        view.setTag(getString(R.string.random_tag));
+                    } else if (view.getTag() == getString(R.string.random_tag)) {
+                        imgId = R.drawable.ic_music_note_eighth_white_48dp;
+                        view.setTag(getString(R.string.index_tag));
+                    } else if (view.getTag() == getString(R.string.index_tag)) {
+                        imgId = R.drawable.ic_music_note_half_white_48dp;
+                        view.setTag(getString(R.string.queue_tag));
+                    }
+                    ((ImageButton) view).setImageResource(imgId);
+                    player.changeMode();
                 }
-                ((ImageButton) view).setImageResource(imgId);
-
-                //todo serve change mode
             }
         });
+    }
+
+    private boolean playerIsAvailable() {
+        return player != null;
     }
 
     private Animation getClickAnimation() {
@@ -176,7 +191,12 @@ public class PlayedFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void setPlayer(Player player){
+    public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public void changeOnPlay(){
+            playButton.setImageResource(R.drawable.pause_circle);
+            playButton.setTag(getString(R.string.true_tag));
     }
 }
