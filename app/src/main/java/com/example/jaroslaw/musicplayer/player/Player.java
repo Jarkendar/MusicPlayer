@@ -2,6 +2,7 @@ package com.example.jaroslaw.musicplayer.player;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.util.Log;
 
 import com.example.jaroslaw.musicplayer.DataBaseLackey;
 import com.example.jaroslaw.musicplayer.PlayerState;
@@ -15,6 +16,8 @@ import java.util.logging.Handler;
 
 public class Player implements IPlayer {
 
+    private static final String TAG = "*******";
+
     private static final int NUMBER_OF_NEXT_SONGS = 10;
     private static final int NUMBER_OF_HISTORY_SONGS = 50;
     private static final int FIRST_FIFTH_SECONDS = 5 * 1000;
@@ -22,9 +25,9 @@ public class Player implements IPlayer {
     private Context context;
     private LinkedList<Track> allTracks;//todo think about load this list in constructor
     private DataBaseLackey dataBaseLackey;
-    private LinkedList<Track> willBePlayed;
+    private LinkedList<Track> willBePlayed = new LinkedList<>();
     private Track currentPlay;
-    private LinkedList<Track> history;
+    private LinkedList<Track> history = new LinkedList<>();
     private Mode mode = Mode.QUEUE;
     private MediaPlayer mediaPlayer;
     private Handler handler;//todo at the end
@@ -88,13 +91,13 @@ public class Player implements IPlayer {
         }
     }
 
-    private LinkedList<Track> createRandomSongsList(){
-        if (allTracks.size() == 0){
+    private LinkedList<Track> createRandomSongsList() {
+        if (allTracks.size() == 0) {
             return new LinkedList<>();
-        }else {
+        } else {
             Random random = new Random(System.currentTimeMillis());
             LinkedList<Track> list = new LinkedList<>();
-            for (int i = 0; i<NUMBER_OF_NEXT_SONGS; ++i){
+            for (int i = 0; i < NUMBER_OF_NEXT_SONGS; ++i) {
                 list.add(allTracks.get(random.nextInt(allTracks.size())));
             }
             return list;
@@ -105,7 +108,7 @@ public class Player implements IPlayer {
     public void start() {
         try {
             mediaPlayer.setDataSource(currentPlay.getData());
-            mediaPlayer.seekTo((int)currentPlay.getCurrentDuration());
+            mediaPlayer.seekTo((int) currentPlay.getCurrentDuration());
             mediaPlayer.prepare();
             mediaPlayer.start();
         } catch (IOException e) {
@@ -117,7 +120,7 @@ public class Player implements IPlayer {
     @Override
     public void chooseAndPlay(String path) {
         Track chosenTrack = getSongFromList(path);
-        if (chosenTrack == null){
+        if (chosenTrack == null) {
             return;
         }
         mediaPlayer.stop();
@@ -135,9 +138,10 @@ public class Player implements IPlayer {
         prepareNextSong();
     }
 
-    private Track getSongFromList(String path){
-        for (Track track: allTracks){
-            if (track.getData().equals(path)){
+    private Track getSongFromList(String path) {
+        Log.d(TAG, "getSongFromList: "+allTracks.size() + " "+path);
+        for (Track track : allTracks) {
+            if (track.getData().equals(path)) {
                 return track;
             }
         }
@@ -160,7 +164,7 @@ public class Player implements IPlayer {
 
     @Override
     public void next() {
-        if (mediaPlayer.isPlaying()){
+        if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
             mediaPlayer.reset();
         }
@@ -181,18 +185,18 @@ public class Player implements IPlayer {
     @Override
     public void previous() {
         int currentPosition = 0;
-        if (mediaPlayer.isPlaying()){
+        if (mediaPlayer.isPlaying()) {
             currentPosition = mediaPlayer.getCurrentPosition();
             mediaPlayer.stop();
         }
-        if (currentPosition > FIRST_FIFTH_SECONDS || history.size() == 0){
+        if (currentPosition > FIRST_FIFTH_SECONDS || history.size() == 0) {
             try {
                 mediaPlayer.prepare();
                 mediaPlayer.start();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else {
+        } else {
             willBePlayed.addFirst(currentPlay);
             currentPlay = history.getFirst();
             history.removeFirst();
@@ -272,7 +276,7 @@ public class Player implements IPlayer {
         }
     }
 
-    private void prepareNextSong(){
+    private void prepareNextSong() {
         MediaPlayer next = new MediaPlayer();
         try {
             next.setDataSource(willBePlayed.getFirst().getData());
@@ -283,14 +287,14 @@ public class Player implements IPlayer {
         }
     }
 
-    private void addNextLastTrackQueue(){
+    private void addNextLastTrackQueue() {
         Track lastTrack = willBePlayed.getLast();
         int indextOfLast = allTracks.indexOf(lastTrack);
         if (allTracks.size() != 0) {
-            if (indextOfLast == allTracks.size() -1){
+            if (indextOfLast == allTracks.size() - 1) {
                 willBePlayed.addLast(allTracks.get(0));
-            }else {
-                willBePlayed.addLast(allTracks.get(indextOfLast+1));
+            } else {
+                willBePlayed.addLast(allTracks.get(indextOfLast + 1));
             }
         }
     }
@@ -302,23 +306,25 @@ public class Player implements IPlayer {
         }
     }
 
-
-
-    private void addTrackToHistory(Track track){
+    private void addTrackToHistory(Track track) {
         history.addFirst(track);
-        while (history.size() > NUMBER_OF_HISTORY_SONGS){
+        while (history.size() > NUMBER_OF_HISTORY_SONGS) {
             history.removeLast();
         }
     }
 
-    private void saveCurrentState(){
+    private void saveCurrentState() {
         dataBaseLackey.saveState(dataBaseLackey.getWritableDatabase(), new PlayerState(history, currentPlay, willBePlayed));
     }
 
-    private void readCurrentState(){
+    private void readCurrentState() {
         PlayerState state = dataBaseLackey.readStateFromDatabase(dataBaseLackey.getReadableDatabase());
         history = state.getHistory();
         currentPlay = state.getCurrent();
         willBePlayed = state.getNext();
+    }
+
+    public void setAllTracks(LinkedList<Track> allTracks) {
+        this.allTracks = allTracks;
     }
 }
