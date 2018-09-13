@@ -137,7 +137,7 @@ public class DataBaseLackey extends SQLiteOpenHelper {
         Log.d(TAG, "deleteTrackFromDatabase: " + data);
     }
 
-    public void saveState(SQLiteDatabase sqLiteDatabase, PlayerState state){
+    public synchronized void saveState(SQLiteDatabase sqLiteDatabase, PlayerState state){
         Log.d(TAG, "saveState: "+sqLiteDatabase+" "+state);
         sqLiteDatabase.beginTransaction();
         sqLiteDatabase.delete(TABLE_STATE, null, null);
