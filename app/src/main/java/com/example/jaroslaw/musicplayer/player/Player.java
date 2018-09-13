@@ -107,11 +107,11 @@ public class Player implements IPlayer {
     @Override
     public void start() {
         try {
-            Log.d(TAG, "start: isPlaying="+mediaPlayer.isPlaying()+" position="+mediaPlayer.getCurrentPosition());
-            if (!mediaPlayer.isPlaying() && mediaPlayer.getCurrentPosition() > 1){
+            Log.d(TAG, "start: isPlaying=" + mediaPlayer.isPlaying() + " position=" + mediaPlayer.getCurrentPosition());
+            if (!mediaPlayer.isPlaying() && mediaPlayer.getCurrentPosition() > 1) {
                 Log.d(TAG, "start: pause");
                 mediaPlayer.start();
-            }else {
+            } else {
                 Log.d(TAG, "start: not pause");
                 mediaPlayer.setDataSource(currentPlay.getData());
                 mediaPlayer.prepare();
@@ -248,6 +248,9 @@ public class Player implements IPlayer {
     @Override
     public LinkedList<Track> getShortListPlayed() {//current song and 2-3 next
         LinkedList<Track> list = new LinkedList<>();
+        if (history.size() != 0) {
+            list.addLast(history.getFirst());
+        }
         list.addLast(currentPlay);
         list.addLast(willBePlayed.get(0));
         list.addLast(willBePlayed.get(1));
@@ -330,11 +333,11 @@ public class Player implements IPlayer {
         history = state.getHistory();
         currentPlay = state.getCurrent();
         willBePlayed = state.getNext();
-        if (currentPlay != null){
+        if (currentPlay != null) {
             try {
                 mediaPlayer.setDataSource(currentPlay.getData());
                 mediaPlayer.prepare();
-                mediaPlayer.seekTo((int)currentPlay.getCurrentDuration());
+                mediaPlayer.seekTo((int) currentPlay.getCurrentDuration());
             } catch (IOException e) {
                 e.printStackTrace();
             }
