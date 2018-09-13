@@ -16,7 +16,7 @@ public class DataBaseLackey extends SQLiteOpenHelper {
 
     private static final String TAG = "*********";
 
-    private static final String DATABASE_NAME = "DATABASE_NAME";
+    private static final String DATABASE_NAME = "DATABASE_NAME.db";
     private static final int DATABASE_VERSION = 1;
 
     private static final String TABLE_TRACKS = "TABLE_TRACKS";
@@ -41,25 +41,30 @@ public class DataBaseLackey extends SQLiteOpenHelper {
 
     public DataBaseLackey(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        Log.d(TAG, "DataBaseLackey: "+context);
     }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.d(TAG, "onDowngrade: "+db+" old "+oldVersion+"new"+newVersion);
         super.onDowngrade(db, oldVersion, newVersion);
         upgradeDataBase(db, oldVersion, newVersion);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        upgradeDataBase(sqLiteDatabase, 0, 1);
+        Log.d(TAG, "onCreate: "+sqLiteDatabase);
+        upgradeDataBase(sqLiteDatabase, 0, DATABASE_VERSION);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        Log.d(TAG, "onUpgrade: "+sqLiteDatabase+" old "+oldVersion+"new"+newVersion);
         upgradeDataBase(sqLiteDatabase, oldVersion, newVersion);
     }
 
     private void upgradeDataBase(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        Log.d(TAG, "upgradeDataBase: "+oldVersion+" new "+ newVersion);
         if (oldVersion < 1) {
             String tracksCreateQuery = "CREATE TABLE " + TABLE_TRACKS + " (" +
                     FIELD_ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -90,7 +95,7 @@ public class DataBaseLackey extends SQLiteOpenHelper {
                     FIELD_DURATION + " LONG NOT NULL, " +
                     FIELD_CURRENT_DURATION + " LONG NOT NULL, " +
                     FIELD_STATE + " TEXT NOT NULL, " +
-                    FIELD_POSITION + "LONG NOT NULL" +
+                    FIELD_POSITION + " LONG NOT NULL" +
                     ");";
             sqLiteDatabase.execSQL(stateCreateQuery);
             Log.d(TAG, "upgradeDataBase: " + stateCreateQuery);
@@ -176,7 +181,7 @@ public class DataBaseLackey extends SQLiteOpenHelper {
                 , null
                 , null
                 , null
-                , FIELD_STATE + "ASC, " + FIELD_POSITION + "ASC");
+                , FIELD_STATE + " ASC, " + FIELD_POSITION + " ASC");
         Log.d(TAG, "readStateFromDatabase: cursor = " + cursor.getCount());
         PlayerState state = new PlayerState();
         while (cursor.moveToNext()) {
