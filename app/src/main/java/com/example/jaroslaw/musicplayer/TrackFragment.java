@@ -111,11 +111,11 @@ public class TrackFragment extends Fragment {
                     null);
             LinkedList<Track> songs = new LinkedList<>();
             while (cursor.moveToNext()) {
-                songs.add(new Track(cursor.getString(1)
-                        , cursor.getString(2)
-                        , cursor.getString(3)
-                        , cursor.getString(4)
-                        , cursor.getLong(5)));
+                songs.add(new Track(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))
+                        , cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE))
+                        , cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
+                        , cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME))
+                        , cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))));
             }
             Log.d("*****", "readMusicFiles: " + Arrays.toString(songs.toArray()));
             cursor.close();
