@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.jaroslaw.musicplayer.player.Player;
 
@@ -31,6 +32,9 @@ public class PlayedFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private ImageButton playButton, nextButton, previousButton, repeatButton, modeButton;
+    private TextView[] titles = new TextView[5];
+    private TextView[] artists = new TextView[5];
+    private TextView[] durations = new TextView[5];
 
 
     public PlayedFragment() {
@@ -74,6 +78,21 @@ public class PlayedFragment extends Fragment {
         previousButton = view.findViewById(R.id.previous_button);
         repeatButton = view.findViewById(R.id.repeat_button);
         modeButton = view.findViewById(R.id.mode_button);
+        titles[0] = view.findViewById(R.id.item_title_previous);
+        titles[1] = view.findViewById(R.id.item_title_current);
+        titles[2] = view.findViewById(R.id.item_title_next);
+        titles[3] = view.findViewById(R.id.item_title_next2);
+        titles[4] = view.findViewById(R.id.item_title_next3);
+        artists[0] = view.findViewById(R.id.item_artist_previous);
+        artists[1] = view.findViewById(R.id.item_artist_current);
+        artists[2] = view.findViewById(R.id.item_artist_next);
+        artists[3] = view.findViewById(R.id.item_artist_next2);
+        artists[4] = view.findViewById(R.id.item_artist_next3);
+        durations[0] = view.findViewById(R.id.item_duration_previous);
+        durations[1] = view.findViewById(R.id.item_duration_current);
+        durations[2] = view.findViewById(R.id.item_duration_next);
+        durations[3] = view.findViewById(R.id.item_duration_next2);
+        durations[4] = view.findViewById(R.id.item_duration_next3);
     }
 
     private void setButtonListeners() {
