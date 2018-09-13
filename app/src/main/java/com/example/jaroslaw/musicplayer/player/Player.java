@@ -327,4 +327,8 @@ public class Player implements IPlayer {
     public void setAllTracks(LinkedList<Track> allTracks) {
         this.allTracks = allTracks;
     }
+
+    public Track getCurrentPlay() {
+        return currentPlay;
+    }
 }
