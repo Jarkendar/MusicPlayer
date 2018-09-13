@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 
 import com.example.jaroslaw.musicplayer.DataBaseLackey;
+import com.example.jaroslaw.musicplayer.PlayerState;
 import com.example.jaroslaw.musicplayer.Track;
 
 import java.io.IOException;
@@ -310,6 +311,6 @@ public class Player implements IPlayer {
     }
 
     private void saveCurrentState(){
-
+        dataBaseLackey.saveState(dataBaseLackey.getWritableDatabase(), new PlayerState(history, currentPlay, willBePlayed));
     }
 }
