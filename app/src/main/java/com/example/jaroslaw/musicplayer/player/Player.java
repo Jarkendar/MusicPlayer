@@ -107,10 +107,17 @@ public class Player implements IPlayer {
     @Override
     public void start() {
         try {
-            mediaPlayer.setDataSource(currentPlay.getData());
-            mediaPlayer.seekTo((int) currentPlay.getCurrentDuration());
-            mediaPlayer.prepare();
-            mediaPlayer.start();
+            Log.d(TAG, "start: isPlaying="+mediaPlayer.isPlaying()+" position="+mediaPlayer.getCurrentPosition());
+            if (!mediaPlayer.isPlaying() && mediaPlayer.getCurrentPosition() > 1){
+                Log.d(TAG, "start: pause");
+                mediaPlayer.start();
+            }else {
+                Log.d(TAG, "start: not pause");
+                mediaPlayer.setDataSource(currentPlay.getData());
+                mediaPlayer.prepare();
+                mediaPlayer.seekTo((int) currentPlay.getCurrentDuration());
+                mediaPlayer.start();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -139,7 +146,7 @@ public class Player implements IPlayer {
     }
 
     private Track getSongFromList(String path) {
-        Log.d(TAG, "getSongFromList: "+allTracks.size() + " "+path);
+        Log.d(TAG, "getSongFromList: " + allTracks.size() + " " + path);
         for (Track track : allTracks) {
             if (track.getData().equals(path)) {
                 return track;
@@ -233,6 +240,7 @@ public class Player implements IPlayer {
                 break;
             }
         }
+        Log.d(TAG, "changeMode: now = " + mode);
         prepareQueueNextSongs();
         prepareNextSong();
     }
@@ -322,6 +330,15 @@ public class Player implements IPlayer {
         history = state.getHistory();
         currentPlay = state.getCurrent();
         willBePlayed = state.getNext();
+        if (currentPlay != null){
+            try {
+                mediaPlayer.setDataSource(currentPlay.getData());
+                mediaPlayer.prepare();
+                mediaPlayer.seekTo((int)currentPlay.getCurrentDuration());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void setAllTracks(LinkedList<Track> allTracks) {
