@@ -21,10 +21,10 @@ public class Player implements IPlayer {
 
     private Context context;
     private LinkedList<Track> allTracks;//todo think about load this list in constructor
-    private DataBaseLackey dataBaseLackey; //todo new table for list play
-    private LinkedList<Track> willBePlayed;//todo 10 songs
+    private DataBaseLackey dataBaseLackey;
+    private LinkedList<Track> willBePlayed;
     private Track currentPlay;
-    private LinkedList<Track> history;// todo 50 songs
+    private LinkedList<Track> history;
     private Mode mode = Mode.QUEUE;
     private MediaPlayer mediaPlayer;
     private Handler handler;//todo at the end
@@ -33,7 +33,8 @@ public class Player implements IPlayer {
         this.context = context;
         dataBaseLackey = new DataBaseLackey(context);
         prepareMediaPlayer();
-        //todo check state, read from db, eventually prepare lists
+        readCurrentState();
+        //todo check state, eventually prepare lists
     }
 
     private void prepareMediaPlayer() {
@@ -312,5 +313,12 @@ public class Player implements IPlayer {
 
     private void saveCurrentState(){
         dataBaseLackey.saveState(dataBaseLackey.getWritableDatabase(), new PlayerState(history, currentPlay, willBePlayed));
+    }
+
+    private void readCurrentState(){
+        PlayerState state = dataBaseLackey.readStateFromDatabase(dataBaseLackey.getReadableDatabase());
+        history = state.getHistory();
+        currentPlay = state.getCurrent();
+        willBePlayed = state.getNext();
     }
 }

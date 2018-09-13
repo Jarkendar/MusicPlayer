@@ -238,6 +238,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
+
                     return new PlayedFragment();
                 case 1:
                     trackFragment = new TrackFragment();
