@@ -7,7 +7,10 @@ public class PlayerState {
     private Track current;
     private LinkedList<Track> next;
 
-    public PlayerState() {}
+    public PlayerState() {
+        history = new LinkedList<>();
+        next = new LinkedList<>();
+    }
 
     public PlayerState(LinkedList<Track> history, Track current, LinkedList<Track> next) {
         this.history = history;
