@@ -22,11 +22,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.jaroslaw.musicplayer.player.Player;
+
 public class MainActivity extends Activity implements ActionBar.TabListener, PlayedFragment.OnFragmentInteractionListener, TrackFragment.OnListFragmentInteractionListener {
+
+    private Player player;
 
     private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     private static final String TAG = "******";
     private TrackFragment trackFragment;
+    private PlayedFragment playedFragment;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -81,6 +86,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
                             .setTabListener(this));
         }
         mayReadMusicFiles();
+        player = new Player(getApplicationContext());
     }
 
     private void mayReadMusicFiles(){
@@ -238,13 +244,17 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
-
-                    return new PlayedFragment();
+                    playedFragment = new PlayedFragment();
+                    playedFragment.setPlayer(player);
+                    return playedFragment;
                 case 1:
                     trackFragment = new TrackFragment();
+                    trackFragment.setPlayer(player);
                     return trackFragment;
                 default:
-                    return new PlayedFragment();
+                    playedFragment = new PlayedFragment();
+                    playedFragment.setPlayer(player);
+                    return playedFragment;
             }
         }
 

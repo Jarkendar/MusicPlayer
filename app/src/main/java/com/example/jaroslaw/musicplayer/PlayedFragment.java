@@ -1,15 +1,17 @@
 package com.example.jaroslaw.musicplayer;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+
+import com.example.jaroslaw.musicplayer.player.Player;
 
 
 /**
@@ -23,6 +25,7 @@ import android.widget.ImageButton;
 public class PlayedFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private Player player;
     private static final String TAG = "*******";
 
     private OnFragmentInteractionListener mListener;
@@ -171,5 +174,9 @@ public class PlayedFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void setPlayer(Player player){
+        this.player = player;
     }
 }

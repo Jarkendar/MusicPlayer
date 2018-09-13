@@ -17,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.jaroslaw.musicplayer.player.Player;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -28,6 +30,7 @@ import java.util.LinkedList;
  */
 public class TrackFragment extends Fragment {
 
+    private Player player;
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
@@ -81,11 +84,11 @@ public class TrackFragment extends Fragment {
     }
 
     public void refresh(){
-        ((MyTrackRecyclerViewAdapter)recyclerView.getAdapter()).setmValues(readMusicFiles());
+        ((MyTrackRecyclerViewAdapter)recyclerView.getAdapter()).setTracks(readMusicFiles());
         recyclerView.getAdapter().notifyDataSetChanged();
         DataBaseLackey dataBaseLackey = new DataBaseLackey(getActivity().getApplicationContext());
         synchronized (getActivity().getApplicationContext()){
-            dataBaseLackey.updateTableTracks(dataBaseLackey.getWritableDatabase(), ((MyTrackRecyclerViewAdapter)recyclerView.getAdapter()).getmValues());
+            dataBaseLackey.updateTableTracks(dataBaseLackey.getWritableDatabase(), ((MyTrackRecyclerViewAdapter)recyclerView.getAdapter()).getTracks());
         }
     }
 
@@ -155,5 +158,9 @@ public class TrackFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(Uri uri);
+    }
+
+    public void setPlayer(Player player){
+        this.player = player;
     }
 }
