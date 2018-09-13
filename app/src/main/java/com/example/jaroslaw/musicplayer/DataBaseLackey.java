@@ -168,6 +168,7 @@ public class DataBaseLackey extends SQLiteOpenHelper {
         contentValues.put(FIELD_DATA, track.getData());
         contentValues.put(FIELD_DISPLAY_NAME, track.getDisplayName());
         contentValues.put(FIELD_DURATION, track.getDurationTime());
+        contentValues.put(FIELD_CURRENT_DURATION, state.equals(STATE_CURRENT) ? track.getCurrentDuration() : 0);
         contentValues.put(FIELD_STATE, state);
         contentValues.put(FIELD_POSITION, position);
         return contentValues;
