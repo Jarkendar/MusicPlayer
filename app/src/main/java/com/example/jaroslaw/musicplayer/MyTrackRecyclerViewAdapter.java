@@ -16,13 +16,13 @@ import java.util.List;
 
 public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecyclerViewAdapter.ViewHolder> {
 
-    private List<Track> mValues;
+    private List<Track> tracks;
     private final OnListFragmentInteractionListener mListener;
     private Context context;
     private MediaPlayer mediaPlayer;
 
     public MyTrackRecyclerViewAdapter(List<Track> items, OnListFragmentInteractionListener listener, Context context) {
-        mValues = items;
+        tracks = items;
         mListener = listener;
         this.context = context;
     }
@@ -36,10 +36,10 @@ public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecy
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.titleText.setText(mValues.get(position).getTitle());
-        holder.artistText.setText(mValues.get(position).getArtist());
-        holder.durationText.setText(mValues.get(position).getDuration());
+        holder.mItem = tracks.get(position);
+        holder.titleText.setText(tracks.get(position).getTitle());
+        holder.artistText.setText(tracks.get(position).getArtist());
+        holder.durationText.setText(tracks.get(position).getDuration());
     }
 
     private void audioPlayer(Track track){
@@ -59,17 +59,17 @@ public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecy
         }
     }
 
-    public List<Track> getmValues() {
-        return mValues;
+    public List<Track> getTracks() {
+        return tracks;
     }
 
-    public void setmValues(List<Track> mValues) {
-        this.mValues = mValues;
+    public void setTracks(List<Track> tracks) {
+        this.tracks = tracks;
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return tracks.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
