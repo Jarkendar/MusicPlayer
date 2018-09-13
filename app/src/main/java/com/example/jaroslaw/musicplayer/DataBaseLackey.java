@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +91,7 @@ public class DataBaseLackey extends SQLiteOpenHelper {
                     FIELD_ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     FIELD_ARTIST + " TEXT NULL," +
                     FIELD_TITLE + " TEXT NOT NULL, " +
-                    FIELD_DATA + " TEXT UNIQUE, " +
+                    FIELD_DATA + " TEXT NOT NULL, " +
                     FIELD_DISPLAY_NAME + " TEXT NULL, " +
                     FIELD_DURATION + " LONG NOT NULL, " +
                     FIELD_CURRENT_DURATION + " LONG NOT NULL, " +
@@ -103,27 +104,28 @@ public class DataBaseLackey extends SQLiteOpenHelper {
     }
 
     public void updateTableTracks(SQLiteDatabase sqLiteDatabase, List<Track> tracks) {
-        Cursor cursor = sqLiteDatabase.query(TABLE_TRACKS, new String[]{FIELD_DATA}, null, null, null, null, FIELD_DATA);
-        Map<String, AtomicInteger> content = new HashMap<>();
-        while (cursor.moveToNext()) {
-            content.put(cursor.getString(0), new AtomicInteger(0));
-        }
-        for (Track track : tracks) {
-            if (content.containsKey(track.getData())) {
-                content.get(track.getData()).getAndIncrement();
-                tracks.remove(track);
+        if (tracks != null) {
+            Cursor cursor = sqLiteDatabase.query(TABLE_TRACKS, new String[]{FIELD_DATA}, null, null, null, null, FIELD_DATA);
+            Map<String, AtomicInteger> content = new HashMap<>();
+            while (cursor.moveToNext()) {
+                content.put(cursor.getString(0), new AtomicInteger(0));
+            }
+            for (Track track : new ArrayList<>(tracks)) {
+                if (content.containsKey(track.getData())) {
+                    content.get(track.getData()).getAndIncrement();
+                    tracks.remove(track);
+                }
+            }
+            cursor.close();
+            for (Track track : tracks) {
+                insertTrackToDatabase(sqLiteDatabase, track);
+            }
+            for (Map.Entry<String, AtomicInteger> entry : content.entrySet()) {
+                if (entry.getValue().get() == 0) {
+                    deleteTrackFromDatabase(sqLiteDatabase, entry.getKey());
+                }
             }
         }
-        cursor.close();
-        for (Track track : tracks) {
-            insertTrackToDatabase(sqLiteDatabase, track);
-        }
-        for (Map.Entry<String, AtomicInteger> entry : content.entrySet()) {
-            if (entry.getValue().get() == 0) {
-                deleteTrackFromDatabase(sqLiteDatabase, entry.getKey());
-            }
-        }
-
     }
 
     private void insertTrackToDatabase(SQLiteDatabase sqLiteDatabase, Track track) {
@@ -191,11 +193,11 @@ public class DataBaseLackey extends SQLiteOpenHelper {
             String data = cursor.getString(cursor.getColumnIndex(FIELD_DATA));
             String displayName = cursor.getString(cursor.getColumnIndex(FIELD_DISPLAY_NAME));
             long duration = cursor.getLong(cursor.getColumnIndex(FIELD_DURATION));
-            long currentDuation = cursor.getLong(cursor.getColumnIndex(FIELD_CURRENT_DURATION));
+            long currentDuration = cursor.getLong(cursor.getColumnIndex(FIELD_CURRENT_DURATION));
             String trackState = cursor.getString(cursor.getColumnIndex(FIELD_STATE));
             switch (trackState) {
                 case STATE_CURRENT: {
-                    state.setCurrent(new Track(artist, title, data, displayName, duration, currentDuation));
+                    state.setCurrent(new Track(artist, title, data, displayName, duration, currentDuration));
                     break;
                 }
                 case STATE_HISTORY: {
