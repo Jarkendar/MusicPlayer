@@ -172,15 +172,12 @@ public class Player implements IPlayer {
 
     @Override
     public void next() {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-            mediaPlayer.reset();
-        }
         addTrackToHistory(currentPlay);
         currentPlay = willBePlayed.getFirst();
         willBePlayed.removeFirst();
         generateNextSong();
         try {
+            mediaPlayer.reset();
             mediaPlayer.setDataSource(currentPlay.getData());
             mediaPlayer.prepare();
             mediaPlayer.start();
