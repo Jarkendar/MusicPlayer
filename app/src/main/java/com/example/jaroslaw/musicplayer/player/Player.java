@@ -11,18 +11,22 @@ import com.example.jaroslaw.musicplayer.Track;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
-import java.util.logging.Handler;
 
-public class Player implements IPlayer {
+public class Player extends Observable implements IPlayer {
 
     private static final String TAG = "*******";
 
     private static final int NUMBER_OF_NEXT_SONGS = 10;
     private static final int NUMBER_OF_HISTORY_SONGS = 50;
     private static final int FIRST_FIFTH_SECONDS = 5 * 1000;
+    public static final String PLAY_NEXT_SONG = "PLAY_NEXT_SONG";
+    public static final String CHANGE_MODE = "CHANGE_MODE";
 
-    private Context context;
+    private LinkedList<Observer> observers;
+
     private LinkedList<Track> allTracks;//todo think about load this list in constructor
     private DataBaseLackey dataBaseLackey;
     private LinkedList<Track> willBePlayed = new LinkedList<>();
@@ -30,10 +34,8 @@ public class Player implements IPlayer {
     private LinkedList<Track> history = new LinkedList<>();
     private Mode mode = Mode.QUEUE;
     private MediaPlayer mediaPlayer;
-    private Handler handler;//todo at the end
 
     public Player(Context context) {
-        this.context = context;
         dataBaseLackey = new DataBaseLackey(context);
         prepareMediaPlayer();
         readCurrentState();
@@ -57,6 +59,7 @@ public class Player implements IPlayer {
                 break;
             }
             case INDEX_RANDOM: {
+                willBePlayed = createRandomSongsList();
                 //todo in future
                 break;
             }
@@ -114,6 +117,7 @@ public class Player implements IPlayer {
                 mediaPlayer.start();
             } else {
                 Log.d(TAG, "start: not pause");
+                mediaPlayer.reset();
                 mediaPlayer.setDataSource(currentPlay.getData());
                 mediaPlayer.prepare();
                 mediaPlayer.seekTo((int) currentPlay.getCurrentDuration());
@@ -224,23 +228,26 @@ public class Player implements IPlayer {
 
     @Override
     public void changeMode() {
-        switch (mode) {
-            case QUEUE: {
-                mode = Mode.RANDOM;
-                break;
+        if (!mediaPlayer.isLooping()) {
+            switch (mode) {
+                case QUEUE: {
+                    mode = Mode.RANDOM;
+                    break;
+                }
+                case RANDOM: {
+                    mode = Mode.INDEX_RANDOM;
+                    break;
+                }
+                case INDEX_RANDOM: {
+                    mode = Mode.QUEUE;
+                    break;
+                }
             }
-            case RANDOM: {
-                mode = Mode.INDEX_RANDOM;
-                break;
-            }
-            case INDEX_RANDOM: {
-                mode = Mode.QUEUE;
-                break;
-            }
+            Log.d(TAG, "changeMode: now = " + mode);
+            prepareQueueNextSongs();
+            prepareNextSong();
+            notifyObservers(CHANGE_MODE);
         }
-        Log.d(TAG, "changeMode: now = " + mode);
-        prepareQueueNextSongs();
-        prepareNextSong();
     }
 
     @Override
@@ -250,9 +257,11 @@ public class Player implements IPlayer {
             list.addLast(history.getFirst());
         }
         list.addLast(currentPlay);
-        list.addLast(willBePlayed.get(0));
-        list.addLast(willBePlayed.get(1));
-        list.addLast(willBePlayed.get(2));
+        if (willBePlayed.size() > 0) {
+            list.addLast(willBePlayed.get(0));
+            list.addLast(willBePlayed.get(1));
+            list.addLast(willBePlayed.get(2));
+        }
         return list;
     }
 
@@ -278,6 +287,7 @@ public class Player implements IPlayer {
                     break;
                 }
                 case INDEX_RANDOM: {
+                    addNextLastTrackRandom();
                     //todo in future
                     break;
                 }
@@ -297,12 +307,13 @@ public class Player implements IPlayer {
         }
     }
 
-    private void setOnCompletionListener(MediaPlayer mediaPlayer){
+    private void setOnCompletionListener(MediaPlayer mediaPlayer) {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
-                Log.d(TAG, "onCompletion: "+currentPlay.getTitle());
+                Log.d(TAG, "onCompletion: " + currentPlay.getTitle());
                 prepareNextSong();
+                notifyObservers(PLAY_NEXT_SONG);
             }
         });
     }
@@ -359,5 +370,39 @@ public class Player implements IPlayer {
 
     public Track getCurrentPlay() {
         return currentPlay;
+    }
+
+    @Override
+    public synchronized void addObserver(Observer observer) {
+        super.addObserver(observer);
+        if (observers == null) {
+            observers = new LinkedList<>();
+        }
+        observers.addLast(observer);
+    }
+
+    @Override
+    public synchronized void deleteObserver(Observer observer) {
+        super.deleteObserver(observer);
+        if (observers != null) {
+            observers.remove(observer);
+        }
+    }
+
+    @Override
+    public void notifyObservers(Object object) {
+        super.notifyObservers(object);
+        for (Observer observer : observers) {
+            observer.update(this, object);
+        }
+    }
+
+    @Override
+    public synchronized void deleteObservers() {
+        super.deleteObservers();
+        if (observers != null) {
+            observers.clear();
+        }
+        observers = null;
     }
 }

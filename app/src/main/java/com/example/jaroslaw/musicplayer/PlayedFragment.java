@@ -227,15 +227,17 @@ public class PlayedFragment extends Fragment {
 
     public void setShortList() {
         LinkedList<Track> shortList = player.getShortListPlayed();
-        int shift = shortList.size() < titles.length ? 1 : 0;
-        for (int i = shift, j = 0; i < titles.length; ++i, ++j) {
-            titles[i].setText(shortList.get(j).getTitle());
-        }
-        for (int i = shift, j = 0; i < artists.length; ++i, ++j) {
-            artists[i].setText(shortList.get(j).getArtist());
-        }
-        for (int i = shift, j = 0; i < durations.length; ++i, ++j) {
-            durations[i].setText(shortList.get(j).getDuration());
+        if (shortList.size() >= titles.length-1) {
+            int shift = shortList.size() < titles.length ? 1 : 0;
+            for (int i = shift, j = 0; i < titles.length; ++i, ++j) {
+                titles[i].setText(shortList.get(j).getTitle());
+            }
+            for (int i = shift, j = 0; i < artists.length; ++i, ++j) {
+                artists[i].setText(shortList.get(j).getArtist());
+            }
+            for (int i = shift, j = 0; i < durations.length; ++i, ++j) {
+                durations[i].setText(shortList.get(j).getDuration());
+            }
         }
     }
 }

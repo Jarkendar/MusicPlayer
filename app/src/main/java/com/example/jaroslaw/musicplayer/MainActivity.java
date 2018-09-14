@@ -31,8 +31,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-public class MainActivity extends Activity implements ActionBar.TabListener, PlayedFragment.OnFragmentInteractionListener, TrackFragment.OnListFragmentInteractionListener {
+public class MainActivity extends Activity implements ActionBar.TabListener, PlayedFragment.OnFragmentInteractionListener, TrackFragment.OnListFragmentInteractionListener, Observer {
 
     private Player player;
 
@@ -94,6 +96,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
                             .setTabListener(this));
         }
         player = new Player(getApplicationContext());
+        player.addObserver(this);
     }
 
     @Override
@@ -102,8 +105,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
         mayReadMusicFiles();
     }
 
-    private void mayReadMusicFiles(){
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
+    private void mayReadMusicFiles() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             refreshTrackFragment();
             setPlayerList();
         }
@@ -159,7 +162,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
         }
     }
 
-    private LinkedList<Track> readMusicFiles(){
+    private LinkedList<Track> readMusicFiles() {
         if (ContextCompat.checkSelfPermission(getApplicationContext(),
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -195,8 +198,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
         return new LinkedList<>();
     }
 
-    private void refreshTrackFragment(){
-        if (trackFragment != null){
+    private void refreshTrackFragment() {
+        if (trackFragment != null) {
             LinkedList<Track> tracks = readMusicFiles();
             player.setAllTracks(tracks);
             new BaseRefresher().execute(new ArrayList<Track>(tracks));
@@ -204,7 +207,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
         }
     }
 
-    private void setPlayerList(){
+    private void setPlayerList() {
         player.setAllTracks(readMusicFiles());
     }
 
@@ -335,8 +338,24 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
         }
     }
 
+    @Override
+    public void update(Observable observable, Object object) {
+        if (observable instanceof Player) {
+            String message = (String) object;
+            switch (message) {
+                case Player.PLAY_NEXT_SONG: {
+                    playedFragment.setShortList();
+                    break;
+                }
+                case Player.CHANGE_MODE: {
+                    playedFragment.setShortList();
+                    break;
+                }
+            }
+        }
+    }
 
-    private class BaseRefresher extends AsyncTask<List<Track>,Void, Void> {
+    private class BaseRefresher extends AsyncTask<List<Track>, Void, Void> {
         @Override
         protected Void doInBackground(List<Track>... linkedLists) {
             DataBaseLackey dataBaseLackey = new DataBaseLackey(getApplicationContext());
