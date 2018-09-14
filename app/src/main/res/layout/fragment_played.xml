@@ -119,6 +119,7 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textSize="@dimen/default_text_size"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -132,6 +133,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textSize="@dimen/default_text_size"
                     app:layout_constraintStart_toStartOf="parent"
@@ -144,6 +146,7 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textSize="@dimen/default_text_size"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -180,6 +183,7 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textSize="@dimen/default_text_size"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -193,6 +197,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textSize="@dimen/default_text_size"
                     app:layout_constraintStart_toStartOf="parent"
@@ -205,6 +210,7 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textSize="@dimen/default_text_size"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -240,6 +246,7 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textSize="@dimen/default_text_size"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -253,6 +260,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textSize="@dimen/default_text_size"
                     app:layout_constraintStart_toStartOf="parent"
@@ -265,30 +273,20 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textSize="@dimen/default_text_size"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <View
-                    android:id="@+id/view_next"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/colorRedAccent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/item_artist_next" />
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraintCurrent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintNext">
@@ -300,6 +298,7 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textSize="@dimen/default_text_size"
                     android:textStyle="bold"
@@ -314,6 +313,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textSize="@dimen/default_text_size"
                     android:textStyle="bold"
@@ -327,6 +327,7 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textSize="@dimen/default_text_size"
                     android:textStyle="bold"
@@ -334,24 +335,13 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <View
-                    android:id="@+id/view_current"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/colorRedAccent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/item_artist_current" />
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraintPrevious"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintCurrent">
@@ -363,6 +353,7 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textSize="@dimen/default_text_size"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -376,6 +367,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textSize="@dimen/default_text_size"
                     app:layout_constraintStart_toStartOf="parent"
@@ -388,24 +380,13 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginTop="8dp"
+                    android:background="@android:color/transparent"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textSize="@dimen/default_text_size"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <View
-                    android:id="@+id/view_previous"
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/colorRedAccent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/item_artist_previous" />
             </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>
