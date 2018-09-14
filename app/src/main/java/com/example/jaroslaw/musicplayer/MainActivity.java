@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 
 import com.example.jaroslaw.musicplayer.player.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -198,7 +199,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
         if (trackFragment != null){
             LinkedList<Track> tracks = readMusicFiles();
             player.setAllTracks(tracks);
-            new BaseRefresher().execute(tracks);
+            new BaseRefresher().execute(new ArrayList<Track>(tracks));
             trackFragment.refresh(tracks);
         }
     }
