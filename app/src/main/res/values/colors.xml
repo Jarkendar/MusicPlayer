@@ -9,4 +9,15 @@
     <color name="colorWhiteText">#ffffff</color>
     <color name="primary_material_dark">#212121</color>
     <color name="background_material_light">#fafafa</color>
+
+    <color name="colorBaseRed">#c40000</color>
+    <color name="colorBaseRedDark">#990000</color>
+    <color name="colorBaseRedBright">#900000</color>
+    <color name="colorRed">#ff0000</color>
+    <color name="colorRedBright">#ff3300</color>
+    <color name="colorOrangeDark">#ff5500</color>
+    <color name="colorOrange">#ff7700</color>
+    <color name="colorOrangeBright">#ff9900</color>
+
+
 </resources>
