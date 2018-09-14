@@ -42,6 +42,7 @@ public class Player implements IPlayer {
 
     private void prepareMediaPlayer() {
         mediaPlayer = new MediaPlayer();
+        setOnCompletionListener(mediaPlayer);
     }
 
     private synchronized void prepareQueueNextSongs() {
@@ -292,10 +293,21 @@ public class Player implements IPlayer {
         try {
             next.setDataSource(willBePlayed.getFirst().getData());
             next.prepare();
+            setOnCompletionListener(next);
             mediaPlayer.setNextMediaPlayer(next);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setOnCompletionListener(MediaPlayer mediaPlayer){
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                Log.d(TAG, "onCompletion: "+currentPlay.getTitle());
+                prepareNextSong();
+            }
+        });
     }
 
     private void addNextLastTrackQueue() {
