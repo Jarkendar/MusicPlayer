@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ public class PlayedFragment extends Fragment {
     private TextView[] titles = new TextView[5];
     private TextView[] artists = new TextView[5];
     private TextView[] durations = new TextView[5];
+    private ConstraintLayout next3, next2, next, current, previous;
 
 
     public PlayedFragment() {
@@ -96,6 +98,11 @@ public class PlayedFragment extends Fragment {
         durations[2] = view.findViewById(R.id.item_duration_next);
         durations[3] = view.findViewById(R.id.item_duration_next2);
         durations[4] = view.findViewById(R.id.item_duration_next3);
+        next3 = view.findViewById(R.id.constraintNext3);
+        next2 = view.findViewById(R.id.constraintNext2);
+        next = view.findViewById(R.id.constraintNext);
+        current = view.findViewById(R.id.constraintCurrent);
+        previous = view.findViewById(R.id.constraintPrevious);
     }
 
     private void setButtonListeners() {
@@ -238,6 +245,22 @@ public class PlayedFragment extends Fragment {
             for (int i = shift, j = 0; i < durations.length; ++i, ++j) {
                 durations[i].setText(shortList.get(j).getDuration());
             }
+            next3.setBackground(getActivity().getDrawable(R.drawable.next3_background));
+            next2.setBackground(getActivity().getDrawable(R.drawable.next2_background));
+            next.setBackground(getActivity().getDrawable(R.drawable.next_background));
+            if (shortList.size() == titles.length){
+                current.setBackground(getActivity().getDrawable(R.drawable.current_background));
+                previous.setBackground(getActivity().getDrawable(R.drawable.previous_background));
+            }else {
+                current.setBackground(getActivity().getDrawable(R.drawable.current_background_end));
+                previous.setBackground(null);
+            }
+        }else {
+            next3.setBackground(null);
+            next2.setBackground(null);
+            next.setBackground(null);
+            current.setBackground(null);
+            previous.setBackground(null);
         }
     }
 }
