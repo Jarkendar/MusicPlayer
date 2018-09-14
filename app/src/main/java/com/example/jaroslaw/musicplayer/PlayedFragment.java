@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.jaroslaw.musicplayer.player.Player;
+
+import java.util.LinkedList;
 
 
 /**
@@ -93,6 +96,7 @@ public class PlayedFragment extends Fragment {
         durations[2] = view.findViewById(R.id.item_duration_next);
         durations[3] = view.findViewById(R.id.item_duration_next2);
         durations[4] = view.findViewById(R.id.item_duration_next3);
+        Log.d(TAG, "setUIVariables: "+titles[0]);
     }
 
     private void setButtonListeners() {
@@ -125,6 +129,7 @@ public class PlayedFragment extends Fragment {
                 if (playerIsAvailable()) {
                     view.startAnimation(getClickAnimation());
                     player.next();
+                    changeOnPlay();
                 }
             }
         });
@@ -134,6 +139,7 @@ public class PlayedFragment extends Fragment {
                 if (playerIsAvailable()) {
                     view.startAnimation(getClickAnimation());
                     player.previous();
+                    changeOnPlay();
                 }
             }
         });
@@ -217,5 +223,30 @@ public class PlayedFragment extends Fragment {
     public void changeOnPlay(){
             playButton.setImageResource(R.drawable.pause_circle);
             playButton.setTag(getString(R.string.true_tag));
+            setShortList();
+    }
+
+    public void setShortList() {
+        LinkedList<Track> shortList = player.getShortListPlayed();
+        Log.d(TAG, "setShortList: "+shortList.size());
+        for (int i = 0, j = 0; i < titles.length; ++i, ++j) {
+            if (i==0 && shortList.size() < titles.length) {
+                i=1;
+            }
+            Log.d(TAG, "setShortList: "+titles[i]);
+            titles[i].setText(shortList.get(j).getTitle());
+        }
+        for (int i = 0, j = 0; i < artists.length; ++i, ++j) {
+            if (i==0 && shortList.size() < artists.length) {
+                i=1;
+            }
+            artists[i].setText(shortList.get(j).getArtist());
+        }
+        for (int i = 0, j = 0; i < durations.length; ++i, ++j) {
+            if (i==0 && shortList.size() < durations.length) {
+                i=1;
+            }
+            durations[i].setText(shortList.get(j).getDuration());
+        }
     }
 }
