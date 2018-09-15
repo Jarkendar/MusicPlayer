@@ -277,6 +277,7 @@ public class PlayedFragment extends Fragment {
         songProgressBar.setMax((int) player.getCurrentPlay().getDurationTime());
         if ((int) player.getCurrentPlay().getCurrentDuration() < songProgressBar.getMax()) {
             songProgressBar.setProgress((int) player.getCurrentPlay().getCurrentDuration());
+            currentTime.setText(changeLongTimeToString((int)player.getCurrentPlay().getCurrentDuration()));
             durationTime.setText(player.getCurrentPlay().getDuration());
         }
     }
