@@ -344,12 +344,16 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
             String message = (String) object;
             switch (message) {
                 case Player.PLAY_NEXT_SONG: {
+                    playedFragment.refreshTimeTextAndSeekBar(0);
                     playedFragment.setShortList();
                     break;
                 }
                 case Player.CHANGE_MODE: {
                     playedFragment.setShortList();
                     break;
+                }
+                case Player.UPDATE_CURRENT_TIME:{
+                    playedFragment.refreshTimeTextAndSeekBar((int)player.getCurrentPlay().getCurrentDuration());
                 }
             }
         }

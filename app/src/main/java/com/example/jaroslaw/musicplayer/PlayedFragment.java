@@ -5,12 +5,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.jaroslaw.musicplayer.player.Player;
@@ -39,6 +41,8 @@ public class PlayedFragment extends Fragment {
     private TextView[] artists = new TextView[5];
     private TextView[] durations = new TextView[5];
     private ConstraintLayout next3, next2, next, current, previous;
+    private TextView currentTime, durationTime;
+    private SeekBar songProgressBar;
 
 
     public PlayedFragment() {
@@ -74,6 +78,9 @@ public class PlayedFragment extends Fragment {
         setUIVariables(rootView);
         setButtonListeners();
         setShortList();
+        if (player.getCurrentPlay() != null) {
+            setDurationTimeOnViews();
+        }
         return rootView;
     }
 
@@ -103,6 +110,9 @@ public class PlayedFragment extends Fragment {
         next = view.findViewById(R.id.constraintNext);
         current = view.findViewById(R.id.constraintCurrent);
         previous = view.findViewById(R.id.constraintPrevious);
+        currentTime = view.findViewById(R.id.currentTime_text);
+        durationTime = view.findViewById(R.id.currentDuration_text);
+        songProgressBar = view.findViewById(R.id.songProgress_bar);
     }
 
     private void setButtonListeners() {
@@ -180,6 +190,24 @@ public class PlayedFragment extends Fragment {
                 }
             }
         });
+        songProgressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    player.seekSongTo(progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     private boolean playerIsAvailable() {
@@ -226,15 +254,36 @@ public class PlayedFragment extends Fragment {
         this.player = player;
     }
 
-    public void changeOnPlay(){
-            playButton.setImageResource(R.drawable.pause_circle);
-            playButton.setTag(getString(R.string.true_tag));
-            setShortList();
+    public void changeOnPlay() {
+        playButton.setImageResource(R.drawable.pause_circle);
+        playButton.setTag(getString(R.string.true_tag));
+        setShortList();
+        setDurationTimeOnViews();
+    }
+
+    public void refreshTimeTextAndSeekBar(int progress) {
+        if (progress < songProgressBar.getMax()) {
+            Log.d(TAG, "refreshTimeTextAndSeekBar: "+progress);
+            currentTime.setText(changeLongTimeToString(progress));
+            songProgressBar.setProgress(progress);
+        }
+    }
+
+    private String changeLongTimeToString(long time) {
+        return time / (60 * 1000) + ":" + (time % (60 * 1000) / 1000 < 10 ? "0" + time % (60 * 1000) / 1000 : time % (60 * 1000) / 1000);
+    }
+
+    private void setDurationTimeOnViews() {
+        songProgressBar.setMax((int) player.getCurrentPlay().getDurationTime());
+        if ((int) player.getCurrentPlay().getCurrentDuration() < songProgressBar.getMax()) {
+            songProgressBar.setProgress((int) player.getCurrentPlay().getCurrentDuration());
+            durationTime.setText(player.getCurrentPlay().getDuration());
+        }
     }
 
     public void setShortList() {
         LinkedList<Track> shortList = player.getShortListPlayed();
-        if (shortList.size() >= titles.length-1) {
+        if (shortList.size() >= titles.length - 1) {
             int shift = shortList.size() < titles.length ? 1 : 0;
             for (int i = shift, j = 0; i < titles.length; ++i, ++j) {
                 titles[i].setText(shortList.get(j).getTitle());
@@ -248,14 +297,14 @@ public class PlayedFragment extends Fragment {
             next3.setBackground(getActivity().getDrawable(R.drawable.next3_background));
             next2.setBackground(getActivity().getDrawable(R.drawable.next2_background));
             next.setBackground(getActivity().getDrawable(R.drawable.next_background));
-            if (shortList.size() == titles.length){
+            if (shortList.size() == titles.length) {
                 current.setBackground(getActivity().getDrawable(R.drawable.current_background));
                 previous.setBackground(getActivity().getDrawable(R.drawable.previous_background));
-            }else {
+            } else {
                 current.setBackground(getActivity().getDrawable(R.drawable.current_background_end));
                 previous.setBackground(null);
             }
-        }else {
+        } else {
             next3.setBackground(null);
             next2.setBackground(null);
             next.setBackground(null);

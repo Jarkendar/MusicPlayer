@@ -2,6 +2,7 @@ package com.example.jaroslaw.musicplayer.player;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.util.Log;
 
 import com.example.jaroslaw.musicplayer.DataBaseLackey;
@@ -24,6 +25,7 @@ public class Player extends Observable implements IPlayer {
     private static final int FIRST_FIFTH_SECONDS = 5 * 1000;
     public static final String PLAY_NEXT_SONG = "PLAY_NEXT_SONG";
     public static final String CHANGE_MODE = "CHANGE_MODE";
+    public static final String UPDATE_CURRENT_TIME = "UPDATE_CURRENT_TIME";
 
     private LinkedList<Observer> observers;
 
@@ -34,12 +36,30 @@ public class Player extends Observable implements IPlayer {
     private LinkedList<Track> history = new LinkedList<>();
     private Mode mode = Mode.QUEUE;
     private MediaPlayer mediaPlayer;
+    private Handler refresher;
+    private Runnable refreshSeekBarRun;
 
     public Player(Context context) {
         dataBaseLackey = new DataBaseLackey(context);
         prepareMediaPlayer();
         readCurrentState();
+        setRefreshSeekBar();
         //todo check state, eventually prepare lists
+    }
+
+    private void setRefreshSeekBar() {
+        refresher = new Handler();
+        refreshSeekBarRun = new Runnable() {
+            @Override
+            public void run() {
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    Log.d(TAG, "run: media = " + mediaPlayer.getCurrentPosition() + " current = " + currentPlay.getCurrentDuration());
+                    currentPlay.setCurrentDuration(mediaPlayer.getCurrentPosition());
+                    notifyObservers(UPDATE_CURRENT_TIME);
+                    refresher.postDelayed(this, 1000);
+                }
+            }
+        };
     }
 
     private void prepareMediaPlayer() {
@@ -126,6 +146,7 @@ public class Player extends Observable implements IPlayer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        startRefresher();
         saveCurrentState();
     }
 
@@ -146,8 +167,8 @@ public class Player extends Observable implements IPlayer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        startRefresher();
         saveCurrentState();
-        prepareNextSong();
     }
 
     private Track getSongFromList(String path) {
@@ -160,10 +181,19 @@ public class Player extends Observable implements IPlayer {
         return null;
     }
 
+    private void startRefresher() {
+        refresher.postDelayed(refreshSeekBarRun, 1000);
+    }
+
+    private void stopRefresher() {
+        refresher.removeCallbacks(refreshSeekBarRun);
+    }
+
     @Override
     public void pause() {
         mediaPlayer.pause();
         currentPlay.setCurrentDuration(mediaPlayer.getCurrentPosition());
+        stopRefresher();
         saveCurrentState();
     }
 
@@ -171,6 +201,7 @@ public class Player extends Observable implements IPlayer {
     public void stop() {
         mediaPlayer.stop();
         currentPlay.setCurrentDuration(0);
+        stopRefresher();
         saveCurrentState();
     }
 
@@ -188,6 +219,7 @@ public class Player extends Observable implements IPlayer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        startRefresher();
         saveCurrentState();
     }
 
@@ -218,6 +250,7 @@ public class Player extends Observable implements IPlayer {
                 e.printStackTrace();
             }
         }
+        startRefresher();
         saveCurrentState();
     }
 
@@ -245,7 +278,6 @@ public class Player extends Observable implements IPlayer {
             }
             Log.d(TAG, "changeMode: now = " + mode);
             prepareQueueNextSongs();
-            prepareNextSong();
             notifyObservers(CHANGE_MODE);
         }
     }
@@ -295,24 +327,19 @@ public class Player extends Observable implements IPlayer {
         }
     }
 
-    private void prepareNextSong() {
-        MediaPlayer next = new MediaPlayer();
-        try {
-            next.setDataSource(willBePlayed.getFirst().getData());
-            next.prepare();
-            setOnCompletionListener(next);
-            mediaPlayer.setNextMediaPlayer(next);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void setOnCompletionListener(MediaPlayer mediaPlayer) {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
                 Log.d(TAG, "onCompletion: " + currentPlay.getTitle());
-                prepareNextSong();
+                mediaPlayer.reset();
+                try {
+                    mediaPlayer.setDataSource(willBePlayed.getFirst().getData());
+                    mediaPlayer.prepare();
+                    mediaPlayer.start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 notifyObservers(PLAY_NEXT_SONG);
             }
         });
@@ -342,6 +369,10 @@ public class Player extends Observable implements IPlayer {
         while (history.size() > NUMBER_OF_HISTORY_SONGS) {
             history.removeLast();
         }
+    }
+
+    public void seekSongTo(int progress) {
+        mediaPlayer.seekTo(progress);
     }
 
     private void saveCurrentState() {
