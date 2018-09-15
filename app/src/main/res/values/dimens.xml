@@ -7,4 +7,5 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="default_text_size">15sp</dimen>
     <dimen name="bigger_text_size">20sp</dimen>
+    <dimen name="smaller_text_size">10sp</dimen>
 </resources>
