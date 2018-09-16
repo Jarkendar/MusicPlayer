@@ -304,6 +304,7 @@ public class Player extends Observable implements IPlayer {
         Collections.reverse(list);
         list.addLast(currentPlay);
         list.addAll(list.size(), willBePlayed);
+        Collections.reverse(list);
         return list;
     }
 
