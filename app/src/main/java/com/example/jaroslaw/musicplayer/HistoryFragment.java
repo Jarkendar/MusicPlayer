@@ -71,13 +71,13 @@ public class HistoryFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-        recyclerView.setAdapter(new MyHistoryRecyclerViewAdapter(player.getListPlayed(), mListener, context, player));
+        recyclerView.setAdapter(new MyHistoryRecyclerViewAdapter(player.getListPlayed(), mListener, getActivity().getApplicationContext(), player));
         }
         return view;
     }
 
     public void refresh(LinkedList<Track> historyList){
-        ((MyTrackRecyclerViewAdapter)recyclerView.getAdapter()).setTracks(historyList);
+        ((MyHistoryRecyclerViewAdapter)recyclerView.getAdapter()).setTracks(historyList);
         recyclerView.getAdapter().notifyDataSetChanged();
     }
 

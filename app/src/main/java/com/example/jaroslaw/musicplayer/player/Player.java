@@ -38,6 +38,7 @@ public class Player extends Observable implements IPlayer {
     private MediaPlayer mediaPlayer;
     private Handler refresher;
     private Runnable refreshSeekBarRun;
+    private int currentPositionInList = -1;
 
     public Player(Context context) {
         dataBaseLackey = new DataBaseLackey(context);
@@ -302,9 +303,14 @@ public class Player extends Observable implements IPlayer {
         LinkedList<Track> list = new LinkedList<>();
         list.addAll(willBePlayed);
         Collections.reverse(list);
+        currentPositionInList = list.size();
         list.addLast(currentPlay);
         list.addAll(list.size(), history);
         return list;
+    }
+
+    public int getCurrentPositionInList(){
+        return currentPositionInList;
     }
 
     private void generateNextSong() {

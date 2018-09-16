@@ -6,8 +6,9 @@
     android:orientation="horizontal">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/history_constraint"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/history_artist"

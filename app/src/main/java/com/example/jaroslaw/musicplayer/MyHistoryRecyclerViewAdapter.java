@@ -2,6 +2,7 @@ package com.example.jaroslaw.musicplayer;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +43,34 @@ public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistory
         holder.titleText.setText(tracks.get(position).getTitle());
         holder.artistText.setText(tracks.get(position).getArtist());
         holder.durationText.setText(tracks.get(position).getDuration());
+        Log.d("*****", "onBindViewHolder: "+position+" "+player.getCurrentPositionInList()+" "+tracks.size()+" "+holder.mView.getBackground().toString());
+        if (position == player.getCurrentPositionInList() && player.getCurrentPositionInList() == tracks.size() - 1) {
+            holder.setBackground(R.drawable.end_current_history_background);
+        } else if (position == player.getCurrentPositionInList()) {
+            holder.setBackground(R.drawable.current_history_background);
+        } else if (position == 0 && player.getCurrentPositionInList() != 1) {
+            holder.setBackground(R.drawable.start_next_history_background);
+        } else if (position == 0 && player.getCurrentPositionInList() == 1) {
+            holder.setBackground(R.drawable.start_end_next_history_background);
+        } else if (position == player.getCurrentPositionInList() - 1) {
+            holder.setBackground(R.drawable.end_next_history_background);
+        } else if (position < player.getCurrentPositionInList() - 1) {
+            holder.setBackground(R.drawable.next_history_background);
+        } else if (position == tracks.size() - 1 && player.getCurrentPositionInList() != tracks.size() - 2) {
+            holder.setBackground(R.drawable.end_previous_history_background);
+        } else if (position == tracks.size() - 1 && player.getCurrentPositionInList() == tracks.size() - 2) {
+            holder.setBackground(R.drawable.start_end_previous_history_background);
+        } else if (position == player.getCurrentPositionInList() + 1) {
+            holder.setBackground(R.drawable.start_previous_history_background);
+        } else if (position > player.getCurrentPositionInList() + 1) {
+            holder.setBackground(R.drawable.previous_history_background);
+        }else {
+            holder.setBackground(R.color.colorOrange);
+        }
+    }
+
+    public void setTracks(List<Track> tracks) {
+        this.tracks = tracks;
     }
 
     @Override
@@ -51,6 +80,7 @@ public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistory
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
+        public final ConstraintLayout historyConstraint;
         public final TextView titleText;
         public final TextView artistText;
         public final TextView durationText;
@@ -60,6 +90,7 @@ public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistory
         public ViewHolder(View view, Context context) {
             super(view);
             mView = view;
+            historyConstraint = (ConstraintLayout) view.findViewById(R.id.history_constraint); 
             titleText = (TextView) view.findViewById(R.id.history_title);
             artistText = (TextView) view.findViewById(R.id.history_artist);
             durationText = (TextView) view.findViewById(R.id.history_duration);
@@ -72,6 +103,10 @@ public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistory
                     mListener.onListFragmentInteraction( Uri.EMPTY);
                 }
             });
+        }
+        
+        public void setBackground(int id){
+            historyConstraint.setBackground(context.getDrawable(id));
         }
 
         @Override
