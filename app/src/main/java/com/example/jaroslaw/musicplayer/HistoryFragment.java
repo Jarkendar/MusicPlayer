@@ -71,7 +71,7 @@ public class HistoryFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-        recyclerView.setAdapter(new MyHistoryRecyclerViewAdapter(new LinkedList<Track>(), mListener, context, player));
+        recyclerView.setAdapter(new MyHistoryRecyclerViewAdapter(player.getListPlayed(), mListener, context, player));
         }
         return view;
     }

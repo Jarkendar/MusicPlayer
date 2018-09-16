@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-public class MainActivity extends Activity implements ActionBar.TabListener, PlayedFragment.OnFragmentInteractionListener, TrackFragment.OnListFragmentInteractionListener, Observer {
+public class MainActivity extends Activity implements ActionBar.TabListener, PlayedFragment.OnFragmentInteractionListener, TrackFragment.OnListFragmentInteractionListener, HistoryFragment.OnListFragmentInteractionListener, Observer {
 
     private Player player;
 
@@ -42,6 +42,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
     private static final String TAG = "******";
     private TrackFragment trackFragment;
     private PlayedFragment playedFragment;
+    private HistoryFragment historyFragment;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -257,6 +258,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
     public void onListFragmentInteraction(Uri uri) {
         Log.d("URI********", "onFragmentInteraction: " + uri.toString());
         playedFragment.changeOnPlay();
+        historyFragment.refresh(player.getListPlayed());
     }
 
     /**
@@ -314,6 +316,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
                     trackFragment = new TrackFragment();
                     trackFragment.setPlayer(player);
                     return trackFragment;
+                case 2:
+                    historyFragment = new HistoryFragment();
+                    historyFragment.setPlayer(player);
+                    return historyFragment;
                 default:
                     playedFragment = new PlayedFragment();
                     playedFragment.setPlayer(player);
@@ -323,7 +329,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -333,6 +339,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
                     return getString(R.string.played_tab);
                 case 1:
                     return getString(R.string.tracks_list_tab);
+                case 2:
+                    return getString(R.string.history_list_tab);
             }
             return null;
         }
