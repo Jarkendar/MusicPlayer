@@ -64,7 +64,7 @@ public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecy
             super(view);
             mView = view;
             titleText = (TextView) view.findViewById(R.id.item_title);
-            artistText = (TextView) view.findViewById(R.id.item_artist_next3);
+            artistText = (TextView) view.findViewById(R.id.item_artist);
             durationText = (TextView) view.findViewById(R.id.item_duration);
             this.context = context;
             view.setOnClickListener(new View.OnClickListener() {
