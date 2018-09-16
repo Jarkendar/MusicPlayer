@@ -300,11 +300,10 @@ public class Player extends Observable implements IPlayer {
     @Override
     public LinkedList<Track> getListPlayed() {//full list {history.reverse,  current, next}
         LinkedList<Track> list = new LinkedList<>();
-        list.addAll(history);
+        list.addAll(willBePlayed);
         Collections.reverse(list);
         list.addLast(currentPlay);
-        list.addAll(list.size(), willBePlayed);
-        Collections.reverse(list);
+        list.addAll(list.size(), history);
         return list;
     }
 
