@@ -31,9 +31,6 @@ import java.util.LinkedList;
 public class TrackFragment extends Fragment {
 
     private Player player;
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
@@ -45,23 +42,15 @@ public class TrackFragment extends Fragment {
     public TrackFragment() {
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static TrackFragment newInstance(int columnCount) {
         TrackFragment fragment = new TrackFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     @Override
@@ -78,7 +67,7 @@ public class TrackFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyTrackRecyclerViewAdapter(readMusicFiles() /*todo read tracks from database*/, mListener, context, player));
+            recyclerView.setAdapter(new MyTrackRecyclerViewAdapter(readMusicFiles(), mListener, context, player));
         }
         return view;
     }
@@ -152,7 +141,6 @@ public class TrackFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(Uri uri);
     }
 
