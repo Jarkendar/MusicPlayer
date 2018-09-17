@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.jaroslaw.musicplayer.player.Player;
+import com.example.jaroslaw.musicplayer.player.PlayerMessages;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -349,18 +350,18 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
     @Override
     public void update(Observable observable, Object object) {
         if (observable instanceof Player) {
-            String message = (String) object;
+            PlayerMessages message = (PlayerMessages) object;
             switch (message) {
-                case Player.PLAY_NEXT_SONG: {
+                case PLAY_NEXT_SONG: {
                     playedFragment.refreshTimeTextAndSeekBar(0);
                     playedFragment.setShortList();
                     break;
                 }
-                case Player.CHANGE_MODE: {
+                case CHANGE_MODE: {
                     playedFragment.setShortList();
                     break;
                 }
-                case Player.UPDATE_CURRENT_TIME:{
+                case UPDATE_CURRENT_TIME:{
                     playedFragment.changeOnPlay();
                     playedFragment.refreshTimeTextAndSeekBar((int)player.getCurrentPlay().getCurrentDuration());
                 }

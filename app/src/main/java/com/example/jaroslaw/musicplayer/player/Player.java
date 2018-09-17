@@ -23,9 +23,6 @@ public class Player extends Observable implements IPlayer {
     private static final int NUMBER_OF_NEXT_SONGS = 10;
     private static final int NUMBER_OF_HISTORY_SONGS = 50;
     private static final int FIRST_FIFTH_SECONDS = 5 * 1000;
-    public static final String PLAY_NEXT_SONG = "PLAY_NEXT_SONG";
-    public static final String CHANGE_MODE = "CHANGE_MODE";
-    public static final String UPDATE_CURRENT_TIME = "UPDATE_CURRENT_TIME";
 
     private LinkedList<Observer> observers;
 
@@ -55,7 +52,7 @@ public class Player extends Observable implements IPlayer {
                 if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                     Log.d(TAG, "run: media = " + mediaPlayer.getCurrentPosition() + " current = " + currentPlay.getCurrentDuration());
                     currentPlay.setCurrentDuration(mediaPlayer.getCurrentPosition());
-                    notifyObservers(UPDATE_CURRENT_TIME);
+                    notifyObservers(PlayerMessages.UPDATE_CURRENT_TIME);
                     refresher.postDelayed(this, 1000);
                 }
             }
@@ -264,7 +261,7 @@ public class Player extends Observable implements IPlayer {
             }
             Log.d(TAG, "changeMode: now = " + mode);
             prepareQueueNextSongs();
-            notifyObservers(CHANGE_MODE);
+            notifyObservers(PlayerMessages.CHANGE_MODE);
         }
     }
 
@@ -331,7 +328,7 @@ public class Player extends Observable implements IPlayer {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                notifyObservers(PLAY_NEXT_SONG);
+                notifyObservers(PlayerMessages.PLAY_NEXT_SONG);
             }
         });
     }
