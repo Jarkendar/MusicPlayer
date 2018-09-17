@@ -29,7 +29,7 @@ public class Player extends Observable implements IPlayer {
 
     private LinkedList<Observer> observers;
 
-    private LinkedList<Track> allTracks;//todo think about load this list in constructor
+    private LinkedList<Track> allTracks;
     private DataBaseLackey dataBaseLackey;
     private LinkedList<Track> willBePlayed = new LinkedList<>();
     private Track currentPlay;
@@ -45,7 +45,6 @@ public class Player extends Observable implements IPlayer {
         prepareMediaPlayer();
         readCurrentState();
         setRefreshSeekBar();
-        //todo check state, eventually prepare lists
     }
 
     private void setRefreshSeekBar() {
@@ -158,16 +157,9 @@ public class Player extends Observable implements IPlayer {
             return;
         }
         mediaPlayer.stop();
-        mediaPlayer.reset();
         currentPlay = chosenTrack;
-        try {
-            mediaPlayer.setDataSource(currentPlay.getData());
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-            prepareQueueNextSongs();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        prepareAndStart(currentPlay.getData());
+        prepareQueueNextSongs();
         startRefresher();
         saveCurrentState();
     }
@@ -212,14 +204,7 @@ public class Player extends Observable implements IPlayer {
         currentPlay = willBePlayed.getFirst();
         willBePlayed.removeFirst();
         generateNextSong();
-        try {
-            mediaPlayer.reset();
-            mediaPlayer.setDataSource(currentPlay.getData());
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        prepareAndStart(currentPlay.getData());
         startRefresher();
         saveCurrentState();
     }
@@ -232,27 +217,27 @@ public class Player extends Observable implements IPlayer {
             mediaPlayer.stop();
         }
         if (currentPosition > FIRST_FIFTH_SECONDS || history.size() == 0) {
-            try {
-                mediaPlayer.prepare();
-                mediaPlayer.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            prepareAndStart(currentPlay.getData());
         } else {
             willBePlayed.addFirst(currentPlay);
             currentPlay = history.getFirst();
             history.removeFirst();
             mediaPlayer.reset();
-            try {
-                mediaPlayer.setDataSource(currentPlay.getData());
-                mediaPlayer.prepare();
-                mediaPlayer.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            prepareAndStart(currentPlay.getData());
         }
         startRefresher();
         saveCurrentState();
+    }
+
+    private void prepareAndStart(String path) {
+        try {
+            mediaPlayer.reset();
+            mediaPlayer.setDataSource(path);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -309,7 +294,7 @@ public class Player extends Observable implements IPlayer {
         return list;
     }
 
-    public int getCurrentPositionInList(){
+    public int getCurrentPositionInList() {
         return currentPositionInList;
     }
 
@@ -353,12 +338,12 @@ public class Player extends Observable implements IPlayer {
 
     private void addNextLastTrackQueue() {
         Track lastTrack = willBePlayed.getLast();
-        int indextOfLast = allTracks.indexOf(lastTrack);
+        int indexOfLast = allTracks.indexOf(lastTrack);
         if (allTracks.size() != 0) {
-            if (indextOfLast == allTracks.size() - 1) {
+            if (indexOfLast == allTracks.size() - 1) {
                 willBePlayed.addLast(allTracks.get(0));
             } else {
-                willBePlayed.addLast(allTracks.get(indextOfLast + 1));
+                willBePlayed.addLast(allTracks.get(indexOfLast + 1));
             }
         }
     }
