@@ -2,6 +2,7 @@ package com.example.jaroslaw.musicplayer;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -29,8 +30,7 @@ import java.util.LinkedList;
  * create an instance of this fragment.
  */
 public class PlayedFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private Player player;
     private static final String TAG = "*******";
 
@@ -49,22 +49,6 @@ public class PlayedFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PlayedFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PlayedFragment newInstance(String param1, String param2) {
-        PlayedFragment fragment = new PlayedFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +57,6 @@ public class PlayedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_played, container, false);
         setUIVariables(rootView);
         setButtonListeners();
@@ -195,17 +178,20 @@ public class PlayedFragment extends Fragment {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
                     player.seekSongTo(progress);
+                    if (progress < seekBar.getMax()) {
+                        currentTime.setText(changeLongTimeToString(progress));
+                    }
                 }
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                currentTime.setTypeface(null, Typeface.BOLD);
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                currentTime.setTypeface(null, Typeface.NORMAL);
             }
         });
     }
@@ -246,7 +232,6 @@ public class PlayedFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
