@@ -361,6 +361,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
                     break;
                 }
                 case Player.UPDATE_CURRENT_TIME:{
+                    playedFragment.changeOnPlay();
                     playedFragment.refreshTimeTextAndSeekBar((int)player.getCurrentPlay().getCurrentDuration());
                 }
             }
