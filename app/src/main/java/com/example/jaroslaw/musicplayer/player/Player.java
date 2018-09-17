@@ -238,8 +238,12 @@ public class Player extends Observable implements IPlayer {
     }
 
     @Override
-    public void setLoopingParam() {
+    public void changeLooping() {
         mediaPlayer.setLooping(!mediaPlayer.isLooping());
+    }
+
+    public boolean isLooping(){
+        return mediaPlayer.isLooping();
     }
 
     @Override

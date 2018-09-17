@@ -147,8 +147,12 @@ public class PlayedFragment extends Fragment {
             public void onClick(View view) {
                 if (playerIsAvailable()) {
                     view.startAnimation(getClickAnimation());
-                    player.setLoopingParam();
-                    //todo change color or image
+                    player.changeLooping();
+                    if (player.isLooping()){
+                        repeatButton.setImageResource(R.drawable.ic_repeat_red_48dp);
+                    }else {
+                        repeatButton.setImageResource(R.drawable.ic_repeat_white_48dp);
+                    }
                 }
             }
         });
