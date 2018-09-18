@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -75,7 +76,7 @@ public class DataBaseLackey extends SQLiteOpenHelper {
                     FIELD_DATA + " TEXT UNIQUE, " +
                     FIELD_DISPLAY_NAME + " TEXT NULL, " +
                     FIELD_DURATION + " LONG NOT NULL, " +
-                    FIELD_COUNT_OF_PLAYED + " INTEGER NOT NULL DEFAULT 0 " +
+                    FIELD_COUNT_OF_PLAYED + " INTEGER DEFAULT 0 " +
                     ");";
             sqLiteDatabase.execSQL(tracksCreateQuery);
             Log.d(TAG, "upgradeDataBase: " + tracksCreateQuery);
@@ -215,11 +216,30 @@ public class DataBaseLackey extends SQLiteOpenHelper {
         return state;
     }
 
+    public LinkedList<Track> getAllSavedTrack(SQLiteDatabase sqLiteDatabase) {
+        LinkedList<Track> tracks = new LinkedList<>();
+        Cursor cursor = sqLiteDatabase.query(TABLE_TRACKS, new String[]{FIELD_TITLE, FIELD_ARTIST, FIELD_DATA, FIELD_DISPLAY_NAME, FIELD_DURATION, FIELD_COUNT_OF_PLAYED}, null, null, null, null, FIELD_TITLE);
+        while (cursor.moveToNext()){
+            String artist = cursor.getString(cursor.getColumnIndex(FIELD_ARTIST));
+            String title = cursor.getString(cursor.getColumnIndex(FIELD_TITLE));
+            String data = cursor.getString(cursor.getColumnIndex(FIELD_DATA));
+            String displayName = cursor.getString(cursor.getColumnIndex(FIELD_DISPLAY_NAME));
+            long duration = cursor.getLong(cursor.getColumnIndex(FIELD_DURATION));
+            int playedTimes = cursor.getInt(cursor.getColumnIndex(FIELD_COUNT_OF_PLAYED));
+            tracks.addLast(new Track(artist, title, data, displayName, duration, 0, playedTimes));
+        }
+        cursor.close();
+        return tracks;
+    }
+
     public int getNumberOfAllPlayed(SQLiteDatabase sqLiteDatabase) {
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT SUM(" + FIELD_COUNT_OF_PLAYED + ") FROM " + TABLE_TRACKS, null);
-        if (cursor.getCount() == 1){
-            return cursor.getInt(0);
-        }else {
+        if (cursor.getCount() == 1) {
+            int numberOfTracks = cursor.getInt(0);
+            cursor.close();
+            return numberOfTracks;
+        } else {
+            cursor.close();
             return 0;
         }
     }
