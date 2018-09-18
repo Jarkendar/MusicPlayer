@@ -8,6 +8,7 @@ public class Track {
     private String duration;
     private long durationTime;
     private long currentDuration;
+    private int playedTimes;
 
     public Track(String artist, String title, String data, String displayName, long duration) {
         this.artist = artist;
@@ -21,6 +22,11 @@ public class Track {
     public Track(String artist, String title, String data, String displayName, long duration, long currentDuration) {
         this(artist, title, data, displayName, duration);
         this.currentDuration = currentDuration;
+    }
+
+    public Track(String artist, String title, String data, String displayName, long duration, long currentDuration, int playedTimes) {
+        this(artist, title, data, displayName, duration, currentDuration);
+        this.playedTimes = playedTimes;
     }
 
     public String getArtist() {
@@ -55,6 +61,14 @@ public class Track {
         this.currentDuration = currentDuration;
     }
 
+    public int getPlayedTimes() {
+        return playedTimes;
+    }
+
+    public void incrementPlayedTimes() {
+        playedTimes++;
+    }
+
     @Override
     public String toString() {
         return "Track{" +
@@ -65,6 +79,7 @@ public class Track {
                 ", duration='" + duration + '\'' +
                 ", durationTime=" + durationTime +
                 ", currentDuration=" + currentDuration +
+                ", playedTimes=" + playedTimes +
                 '}';
     }
 }
