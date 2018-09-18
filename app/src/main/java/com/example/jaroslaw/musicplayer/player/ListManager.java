@@ -31,48 +31,6 @@ public class ListManager {
         dataBaseLackey = new DataBaseLackey(context);
     }
 
-    private LinkedList<Track> createQueueSongsList() {
-        int startIndex = allTracks.indexOf(currentPlay) + 1;//+1 because i not want to current song
-        if (startIndex == 0) {
-            return new LinkedList<>();
-        } else if (allTracks.size() != 0 && allTracks.size() < NUMBER_OF_NEXT_SONGS) {
-            LinkedList<Track> list = new LinkedList<>();
-            for (int i = 0, currentIndex = startIndex; i < NUMBER_OF_NEXT_SONGS; ++i) {
-                if (currentIndex == allTracks.size()) {
-                    currentIndex = 0;
-                    list.add(allTracks.get(currentIndex));
-                } else {
-                    list.add(allTracks.get(currentIndex));
-                }
-                currentIndex++;
-            }
-            return list;
-        } else if (startIndex + NUMBER_OF_NEXT_SONGS < allTracks.size()) {
-            return new LinkedList<>(allTracks.subList(startIndex, startIndex + NUMBER_OF_NEXT_SONGS));
-        } else if (startIndex + NUMBER_OF_NEXT_SONGS >= allTracks.size()) {
-            int onStart = NUMBER_OF_NEXT_SONGS - (allTracks.size() - startIndex);
-            LinkedList<Track> list = new LinkedList<>(allTracks.subList(startIndex, allTracks.size()));
-            list.addAll(new LinkedList<>(allTracks.subList(0, onStart)));
-            return list;
-        } else {
-            return new LinkedList<>();
-        }
-    }
-
-
-    private LinkedList<Track> createRandomSongsList() {
-        if (allTracks.size() == 0) {
-            return new LinkedList<>();
-        } else {
-            Random random = new Random(System.currentTimeMillis());
-            LinkedList<Track> list = new LinkedList<>();
-            for (int i = 0; i < NUMBER_OF_NEXT_SONGS; ++i) {
-                list.add(allTracks.get(random.nextInt(allTracks.size())));
-            }
-            return list;
-        }
-    }
-
     public Track getSongFromList(String path) {
         Log.d(TAG, "getSongFromList: " + allTracks.size() + " " + path);
         for (Track track : allTracks) {
@@ -107,6 +65,11 @@ public class ListManager {
         return list;
     }
 
+    public void chooseSong(Track track, Mode mode) {
+        currentPlay = track;
+        prepareQueueNextSongs(mode);
+    }
+
     public synchronized void prepareQueueNextSongs(Mode mode) {
         willBePlayed.clear();
         switch (mode) {
@@ -125,6 +88,62 @@ public class ListManager {
             }
         }
         saveCurrentState();
+    }
+
+    private LinkedList<Track> createQueueSongsList() {
+        int startIndex = allTracks.indexOf(currentPlay) + 1;//+1 because i not want to current song
+        if (startIndex == 0) {
+            return new LinkedList<>();
+        } else if (allTracks.size() != 0 && allTracks.size() < NUMBER_OF_NEXT_SONGS) {
+            LinkedList<Track> list = new LinkedList<>();
+            for (int i = 0, currentIndex = startIndex; i < NUMBER_OF_NEXT_SONGS; ++i) {
+                if (currentIndex == allTracks.size()) {
+                    currentIndex = 0;
+                    list.add(allTracks.get(currentIndex));
+                } else {
+                    list.add(allTracks.get(currentIndex));
+                }
+                currentIndex++;
+            }
+            return list;
+        } else if (startIndex + NUMBER_OF_NEXT_SONGS < allTracks.size()) {
+            return new LinkedList<>(allTracks.subList(startIndex, startIndex + NUMBER_OF_NEXT_SONGS));
+        } else if (startIndex + NUMBER_OF_NEXT_SONGS >= allTracks.size()) {
+            int onStart = NUMBER_OF_NEXT_SONGS - (allTracks.size() - startIndex);
+            LinkedList<Track> list = new LinkedList<>(allTracks.subList(startIndex, allTracks.size()));
+            list.addAll(new LinkedList<>(allTracks.subList(0, onStart)));
+            return list;
+        } else {
+            return new LinkedList<>();
+        }
+    }
+
+    private LinkedList<Track> createRandomSongsList() {
+        if (allTracks.size() == 0) {
+            return new LinkedList<>();
+        } else {
+            Random random = new Random(System.currentTimeMillis());
+            LinkedList<Track> list = new LinkedList<>();
+            for (int i = 0; i < NUMBER_OF_NEXT_SONGS; ++i) {
+                list.add(allTracks.get(random.nextInt(allTracks.size())));
+            }
+            return list;
+        }
+    }
+
+    public void setNext(Mode mode) {
+        addTrackToHistory(currentPlay);
+        currentPlay = willBePlayed.getFirst();
+        willBePlayed.removeFirst();
+        generateNextSong(mode);
+    }
+
+    public void setPrevious(int actualDuration) {
+        if (actualDuration <= FIRST_FIFTH_SECONDS && history.size() != 0) {
+            willBePlayed.addFirst(currentPlay);
+            currentPlay = history.getFirst();
+            history.removeFirst();
+        }
     }
 
     private void generateNextSong(Mode mode) {
@@ -146,7 +165,6 @@ public class ListManager {
             }
         }
     }
-
 
     private void addNextLastTrackQueue() {
         Track lastTrack = willBePlayed.getLast();
@@ -186,11 +204,6 @@ public class ListManager {
         return currentPlay;
     }
 
-    public void chooseSong(Track track, Mode mode) {
-        currentPlay = track;
-        prepareQueueNextSongs(mode);
-    }
-
     public Track getCurrentPlay() {
         return currentPlay;
     }
@@ -201,21 +214,6 @@ public class ListManager {
 
     public void setDurationOnCurrentPlay(int duration) {
         currentPlay.setCurrentDuration(duration);
-    }
-
-    public void setNext(Mode mode) {
-        addTrackToHistory(currentPlay);
-        currentPlay = willBePlayed.getFirst();
-        willBePlayed.removeFirst();
-        generateNextSong(mode);
-    }
-
-    public void setPrevious(int actualDuration) {
-        if (actualDuration <= FIRST_FIFTH_SECONDS && history.size() != 0) {
-            willBePlayed.addFirst(currentPlay);
-            currentPlay = history.getFirst();
-            history.removeFirst();
-        }
     }
 
     public int getCurrentPositionOnList() {
