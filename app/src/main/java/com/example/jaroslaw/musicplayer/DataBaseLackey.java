@@ -27,6 +27,7 @@ public class DataBaseLackey extends SQLiteOpenHelper {
     private static final String FIELD_DATA = "DATA";
     private static final String FIELD_DISPLAY_NAME = "DISPLAY_NAME";
     private static final String FIELD_DURATION = "DURATION";
+    private static final String FIELD_COUNT_OF_PLAYED = "COUNT_OF_PLAYED";
 
     private static final String TABLE_STATE = "TABLE_STATE";
     private static final String FIELD_STATE = "STATE";
@@ -72,8 +73,9 @@ public class DataBaseLackey extends SQLiteOpenHelper {
                     FIELD_ARTIST + " TEXT NULL," +
                     FIELD_TITLE + " TEXT NOT NULL, " +
                     FIELD_DATA + " TEXT UNIQUE, " +
-                    FIELD_DISPLAY_NAME + " TEXT NULL," +
-                    FIELD_DURATION + " LONG NOT NULL" +
+                    FIELD_DISPLAY_NAME + " TEXT NULL, " +
+                    FIELD_DURATION + " LONG NOT NULL, " +
+                    FIELD_COUNT_OF_PLAYED + " INTEGER NOT NULL DEFAULT 0 " +
                     ");";
             sqLiteDatabase.execSQL(tracksCreateQuery);
             Log.d(TAG, "upgradeDataBase: " + tracksCreateQuery);
