@@ -27,7 +27,7 @@ public class ListManager {
     private int currentPositionOnList = -1;
 
 
-    public ListManager(Context context){
+    public ListManager(Context context) {
         dataBaseLackey = new DataBaseLackey(context);
     }
 
@@ -186,7 +186,7 @@ public class ListManager {
         return currentPlay;
     }
 
-    public void chooseSong(Track track, Mode mode){
+    public void chooseSong(Track track, Mode mode) {
         currentPlay = track;
         prepareQueueNextSongs(mode);
     }
@@ -195,22 +195,22 @@ public class ListManager {
         return currentPlay;
     }
 
-    public void setAllTracks(LinkedList<Track> allTracks) {
-        this.allTracks = allTracks;
+    public void refreshTracksFromDatabase() {
+        allTracks = dataBaseLackey.getAllSavedTrack(dataBaseLackey.getReadableDatabase());
     }
 
-    public void setDurationOnCurrentPlay(int duration){
+    public void setDurationOnCurrentPlay(int duration) {
         currentPlay.setCurrentDuration(duration);
     }
 
-    public void setNext(Mode mode){
+    public void setNext(Mode mode) {
         addTrackToHistory(currentPlay);
         currentPlay = willBePlayed.getFirst();
         willBePlayed.removeFirst();
         generateNextSong(mode);
     }
 
-    public void setPrevious(int actualDuration){
+    public void setPrevious(int actualDuration) {
         if (actualDuration <= FIRST_FIFTH_SECONDS && history.size() != 0) {
             willBePlayed.addFirst(currentPlay);
             currentPlay = history.getFirst();
@@ -222,7 +222,11 @@ public class ListManager {
         return currentPositionOnList;
     }
 
-    public String getNextSongPath(){
+    public String getNextSongPath() {
         return willBePlayed.getFirst().getData();
+    }
+
+    public LinkedList<Track> getAllTracks() {
+        return allTracks;
     }
 }

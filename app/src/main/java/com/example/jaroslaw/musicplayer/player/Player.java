@@ -147,7 +147,7 @@ public class Player extends Observable implements IPlayer {
         mediaPlayer.setLooping(!mediaPlayer.isLooping());
     }
 
-    public boolean isLooping(){
+    public boolean isLooping() {
         return mediaPlayer.isLooping();
     }
 
@@ -181,7 +181,7 @@ public class Player extends Observable implements IPlayer {
 
     @Override
     public LinkedList getListPlayed() {
-        return listManager.getListPlayed()  ;
+        return listManager.getListPlayed();
     }
 
     public int getCurrentPositionOnList() {
@@ -210,19 +210,19 @@ public class Player extends Observable implements IPlayer {
         mediaPlayer.seekTo(progress);
     }
 
-    public void setAllTracks(LinkedList<Track> allTracks) {
-        listManager.setAllTracks(allTracks);
+    public void setAllTracks() {
+        listManager.refreshTracksFromDatabase();
     }
 
     public Track getCurrentPlay() {
         return listManager.getCurrentPlay();
     }
 
-    private void readCurrentState(){
+    private void readCurrentState() {
         prepareSong(listManager.readCurrentState());
     }
 
-    private void prepareSong(Track track){
+    private void prepareSong(Track track) {
         if (track != null) {
             try {
                 mediaPlayer.setDataSource(track.getData());
@@ -266,5 +266,9 @@ public class Player extends Observable implements IPlayer {
             observers.clear();
         }
         observers = null;
+    }
+
+    public ListManager getListManager() {
+        return listManager;
     }
 }

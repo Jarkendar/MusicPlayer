@@ -203,14 +203,18 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
     private void refreshTrackFragment() {
         if (trackFragment != null) {
             LinkedList<Track> tracks = readMusicFiles();
-            player.setAllTracks(tracks);
             new BaseRefresher().execute(new ArrayList<Track>(tracks));
             trackFragment.refresh(tracks);
         }
     }
 
+    private void refreshPlayerList() {
+        player.setAllTracks();
+        trackFragment.refresh(player.getListManager().getAllTracks());
+    }
+
     private void setPlayerList() {
-        player.setAllTracks(readMusicFiles());
+        player.setAllTracks();
     }
 
     @Override
@@ -361,9 +365,9 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
                     playedFragment.setShortList();
                     break;
                 }
-                case UPDATE_CURRENT_TIME:{
+                case UPDATE_CURRENT_TIME: {
                     playedFragment.changeOnPlay();
-                    playedFragment.refreshTimeTextAndSeekBar((int)player.getCurrentPlay().getCurrentDuration());
+                    playedFragment.refreshTimeTextAndSeekBar((int) player.getCurrentPlay().getCurrentDuration());
                 }
             }
         }
@@ -376,6 +380,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
             synchronized (getApplicationContext()) {
                 dataBaseLackey.updateTableTracks(dataBaseLackey.getWritableDatabase(), linkedLists[0]);
             }
+            refreshPlayerList();
             return null;
         }
     }
