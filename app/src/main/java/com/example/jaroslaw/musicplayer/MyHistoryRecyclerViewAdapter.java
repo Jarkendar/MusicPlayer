@@ -43,26 +43,26 @@ public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistory
         holder.titleText.setText(tracks.get(position).getTitle());
         holder.artistText.setText(tracks.get(position).getArtist());
         holder.durationText.setText(tracks.get(position).getDuration());
-        Log.d("*****", "onBindViewHolder: "+position+" "+player.getCurrentPositionInList()+" "+tracks.size()+" "+holder.mView.getBackground().toString());
-        if (position == player.getCurrentPositionInList() && player.getCurrentPositionInList() == tracks.size() - 1) {
+        Log.d("*****", "onBindViewHolder: "+position+" "+player.getCurrentPositionOnList()+" "+tracks.size()+" "+holder.mView.getBackground().toString());
+        if (position == player.getCurrentPositionOnList() && player.getCurrentPositionOnList() == tracks.size() - 1) {
             holder.setBackground(R.drawable.end_current_history_background);
-        } else if (position == player.getCurrentPositionInList()) {
+        } else if (position == player.getCurrentPositionOnList()) {
             holder.setBackground(R.drawable.current_history_background);
-        } else if (position == 0 && player.getCurrentPositionInList() != 1) {
+        } else if (position == 0 && player.getCurrentPositionOnList() != 1) {
             holder.setBackground(R.drawable.start_next_history_background);
-        } else if (position == 0 && player.getCurrentPositionInList() == 1) {
+        } else if (position == 0 && player.getCurrentPositionOnList() == 1) {
             holder.setBackground(R.drawable.start_end_next_history_background);
-        } else if (position == player.getCurrentPositionInList() - 1) {
+        } else if (position == player.getCurrentPositionOnList() - 1) {
             holder.setBackground(R.drawable.end_next_history_background);
-        } else if (position < player.getCurrentPositionInList() - 1) {
+        } else if (position < player.getCurrentPositionOnList() - 1) {
             holder.setBackground(R.drawable.next_history_background);
-        } else if (position == tracks.size() - 1 && player.getCurrentPositionInList() != tracks.size() - 2) {
+        } else if (position == tracks.size() - 1 && player.getCurrentPositionOnList() != tracks.size() - 2) {
             holder.setBackground(R.drawable.end_previous_history_background);
-        } else if (position == tracks.size() - 1 && player.getCurrentPositionInList() == tracks.size() - 2) {
+        } else if (position == tracks.size() - 1 && player.getCurrentPositionOnList() == tracks.size() - 2) {
             holder.setBackground(R.drawable.start_end_previous_history_background);
-        } else if (position == player.getCurrentPositionInList() + 1) {
+        } else if (position == player.getCurrentPositionOnList() + 1) {
             holder.setBackground(R.drawable.start_previous_history_background);
-        } else if (position > player.getCurrentPositionInList() + 1) {
+        } else if (position > player.getCurrentPositionOnList() + 1) {
             holder.setBackground(R.drawable.previous_history_background);
         }else {
             holder.setBackground(R.color.colorOrange);
