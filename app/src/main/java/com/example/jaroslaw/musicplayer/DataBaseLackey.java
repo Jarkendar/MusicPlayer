@@ -43,30 +43,30 @@ public class DataBaseLackey extends SQLiteOpenHelper {
 
     public DataBaseLackey(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        Log.d(TAG, "DataBaseLackey: "+context);
+        Log.d(TAG, "DataBaseLackey: " + context);
     }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.d(TAG, "onDowngrade: "+db+" old "+oldVersion+"new"+newVersion);
+        Log.d(TAG, "onDowngrade: " + db + " old " + oldVersion + "new" + newVersion);
         super.onDowngrade(db, oldVersion, newVersion);
         upgradeDataBase(db, oldVersion, newVersion);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        Log.d(TAG, "onCreate: "+sqLiteDatabase);
+        Log.d(TAG, "onCreate: " + sqLiteDatabase);
         upgradeDataBase(sqLiteDatabase, 0, DATABASE_VERSION);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        Log.d(TAG, "onUpgrade: "+sqLiteDatabase+" old "+oldVersion+"new"+newVersion);
+        Log.d(TAG, "onUpgrade: " + sqLiteDatabase + " old " + oldVersion + "new" + newVersion);
         upgradeDataBase(sqLiteDatabase, oldVersion, newVersion);
     }
 
     private void upgradeDataBase(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        Log.d(TAG, "upgradeDataBase: "+oldVersion+" new "+ newVersion);
+        Log.d(TAG, "upgradeDataBase: " + oldVersion + " new " + newVersion);
         if (oldVersion < 1) {
             String tracksCreateQuery = "CREATE TABLE " + TABLE_TRACKS + " (" +
                     FIELD_ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -146,18 +146,18 @@ public class DataBaseLackey extends SQLiteOpenHelper {
         Log.d(TAG, "deleteTrackFromDatabase: " + data);
     }
 
-    public synchronized void saveState(SQLiteDatabase sqLiteDatabase, PlayerState state){
-        Log.d(TAG, "saveState: "+sqLiteDatabase+" "+state);
+    public synchronized void saveState(SQLiteDatabase sqLiteDatabase, PlayerState state) {
+        Log.d(TAG, "saveState: " + sqLiteDatabase + " " + state);
         sqLiteDatabase.beginTransaction();
         sqLiteDatabase.delete(TABLE_STATE, null, null);
         Log.d(TAG, "saveState: drop base");
-        for (int i = 0; i<state.getHistory().size(); ++i){
+        for (int i = 0; i < state.getHistory().size(); ++i) {
             sqLiteDatabase.insert(TABLE_STATE, null, createTrackValues(state.getHistory().get(i), STATE_HISTORY, i));
         }
         Log.d(TAG, "saveState: insert all history");
         sqLiteDatabase.insert(TABLE_STATE, null, createTrackValues(state.getCurrent(), STATE_CURRENT, 0));
         Log.d(TAG, "saveState: insert current");
-        for (int i = 0; i<state.getNext().size(); ++i){
+        for (int i = 0; i < state.getNext().size(); ++i) {
             sqLiteDatabase.insert(TABLE_STATE, null, createTrackValues(state.getNext().get(i), STATE_NEXT, i));
         }
         Log.d(TAG, "saveState: insert all next");
@@ -165,7 +165,7 @@ public class DataBaseLackey extends SQLiteOpenHelper {
         sqLiteDatabase.endTransaction();
     }
 
-    private ContentValues createTrackValues(Track track, String state, int position){
+    private ContentValues createTrackValues(Track track, String state, int position) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(FIELD_ARTIST, track.getArtist());
         contentValues.put(FIELD_TITLE, track.getTitle());
@@ -213,5 +213,14 @@ public class DataBaseLackey extends SQLiteOpenHelper {
         }
         cursor.close();
         return state;
+    }
+
+    public int getNumberOfAllPlayed(SQLiteDatabase sqLiteDatabase) {
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT SUM(" + FIELD_COUNT_OF_PLAYED + ") FROM " + TABLE_TRACKS, null);
+        if (cursor.getCount() == 1){
+            return cursor.getInt(0);
+        }else {
+            return 0;
+        }
     }
 }
