@@ -46,7 +46,10 @@ public class ListManager {
         if (history.size() != 0) {
             list.addLast(history.getFirst());
         }
-        list.addLast(currentPlay);
+        if (currentPlay != null) {
+            list.addLast(currentPlay);
+        }
+
         if (willBePlayed.size() > 0) {
             list.addLast(willBePlayed.get(0));
             list.addLast(willBePlayed.get(1));
@@ -60,7 +63,9 @@ public class ListManager {
         list.addAll(willBePlayed);
         Collections.reverse(list);
         currentPositionOnList = list.size();
-        list.addLast(currentPlay);
+        if (currentPlay!= null) {
+            list.addLast(currentPlay);
+        }
         list.addAll(list.size(), history);
         return list;
     }
@@ -226,5 +231,11 @@ public class ListManager {
 
     public LinkedList<Track> getAllTracks() {
         return allTracks;
+    }
+
+    public void incrementCurrentPlayedTimes(){
+        Log.d(TAG, "incrementCurrentPlayedTimes: "+currentPlay);
+        currentPlay.incrementPlayedTimes();
+        dataBaseLackey.updateCountOfPlayed(dataBaseLackey.getWritableDatabase(), currentPlay.getData(), currentPlay.getPlayedTimes());
     }
 }
