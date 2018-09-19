@@ -23,6 +23,9 @@ public class Player extends Observable implements IPlayer {
     private MediaPlayer mediaPlayer;
     private Handler refresher;
     private Runnable refreshSeekBarRun;
+    private Track nowPlay;
+    private int nowTimeMark;
+    private boolean mark;
 
     public Player(Context context) {
         listManager = new ListManager(context);
@@ -40,6 +43,16 @@ public class Player extends Observable implements IPlayer {
                     Log.d(TAG, "run: media = " + mediaPlayer.getCurrentPosition() + " current = " + listManager.getCurrentPlay().getCurrentDuration());
                     listManager.getCurrentPlay().setCurrentDuration(mediaPlayer.getCurrentPosition());
                     notifyObservers(PlayerMessages.UPDATE_CURRENT_TIME);
+                    if (!mark && listManager.getCurrentPlay() == nowPlay && mediaPlayer.getCurrentPosition() > nowTimeMark){
+                        listManager.incrementCurrentPlayedTimes();
+                        mark = true;
+                        Log.d(TAG, "run: now increment");
+                    }else if (listManager.getCurrentPlay() != nowPlay) {
+                        nowPlay = listManager.getCurrentPlay();
+                        mark = false;
+                        nowTimeMark = (int)(listManager.getCurrentPlay().getDurationTime()*0.1);
+                        Log.d(TAG, "change song : "+nowTimeMark+" "+mark+" "+nowPlay);
+                    }
                     refresher.postDelayed(this, 1000);
                 }
             }
@@ -87,7 +100,7 @@ public class Player extends Observable implements IPlayer {
     }
 
     private void startRefresher() {
-        refresher.postDelayed(refreshSeekBarRun, 1000);
+        refresher.post(refreshSeekBarRun);
     }
 
     private void stopRefresher() {
@@ -175,12 +188,12 @@ public class Player extends Observable implements IPlayer {
     }
 
     @Override
-    public LinkedList getShortListPlayed() {
+    public LinkedList<Track> getShortListPlayed() {
         return listManager.getShortListPlayed();
     }
 
     @Override
-    public LinkedList getListPlayed() {
+    public LinkedList<Track> getListPlayed() {
         return listManager.getListPlayed();
     }
 

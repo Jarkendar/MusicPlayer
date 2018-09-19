@@ -243,4 +243,11 @@ public class DataBaseLackey extends SQLiteOpenHelper {
             return 0;
         }
     }
+
+    public void updateCountOfPlayed(SQLiteDatabase sqLiteDatabase, String data, int count){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(FIELD_COUNT_OF_PLAYED, count);
+        sqLiteDatabase.update(TABLE_TRACKS, contentValues, FIELD_DATA+"=?", new String[]{data});
+        Log.d(TAG, "updateCountOfPlayed: "+contentValues+" "+data+" "+sqLiteDatabase);
+    }
 }
