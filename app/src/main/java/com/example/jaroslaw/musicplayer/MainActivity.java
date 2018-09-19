@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat;
@@ -203,8 +204,21 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
     private void refreshTrackFragment() {
         if (trackFragment != null) {
             LinkedList<Track> tracks = readMusicFiles();
-            new BaseRefresher().execute(new ArrayList<Track>(tracks));
+            final BaseRefresher baseRefresher = new BaseRefresher();
+            baseRefresher.execute(new ArrayList<Track>(tracks));
             trackFragment.refresh(tracks);
+            refreshPlayerList();
+            final Handler handler = new Handler();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (baseRefresher.getStatus() == AsyncTask.Status.FINISHED){
+                        refreshPlayerList();
+                    }else {
+                        handler.postDelayed(this, 500);
+                    }
+                }
+            });
         }
     }
 
@@ -380,7 +394,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
             synchronized (getApplicationContext()) {
                 dataBaseLackey.updateTableTracks(dataBaseLackey.getWritableDatabase(), linkedLists[0]);
             }
-            refreshPlayerList();
             return null;
         }
     }
