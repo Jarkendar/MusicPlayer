@@ -103,8 +103,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         mayReadMusicFiles();
     }
 
