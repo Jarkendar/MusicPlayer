@@ -19,6 +19,8 @@
     <string name="change_mode_random_description">Change mode to index random</string>
     <string name="change_mode_index_random_description">Change mode to queue</string>
     <string name="repeat_mode_description">Repeat current song</string>
+    <string name="no_favorite_icon_description">No favourite</string>
+    <string name="favorite_icon_description">Favourite</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="action_settings">Settings</string>
 

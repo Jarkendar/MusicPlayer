@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.jaroslaw.musicplayer.TrackFragment.OnListFragmentInteractionListener;
@@ -65,15 +66,17 @@ public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecy
         public final TextView titleText;
         public final TextView artistText;
         public final TextView durationText;
+        public final ImageButton favoriteButton;
         public Track track;
         public Context context;
 
         public ViewHolder(View view, Context context) {
             super(view);
             mView = view;
-            titleText = (TextView) view.findViewById(R.id.item_title);
-            artistText = (TextView) view.findViewById(R.id.item_artist);
-            durationText = (TextView) view.findViewById(R.id.item_duration);
+            titleText = view.findViewById(R.id.item_title);
+            artistText = view.findViewById(R.id.item_artist);
+            durationText = view.findViewById(R.id.item_duration);
+            favoriteButton = view.findViewById(R.id.favorite_button);
             this.context = context;
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
