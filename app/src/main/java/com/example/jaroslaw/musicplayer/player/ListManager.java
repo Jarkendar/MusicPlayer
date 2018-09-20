@@ -9,7 +9,9 @@ import com.example.jaroslaw.musicplayer.Track;
 
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.NavigableMap;
 import java.util.Random;
+import java.util.TreeMap;
 
 public class ListManager {
 
@@ -63,7 +65,7 @@ public class ListManager {
         list.addAll(willBePlayed);
         Collections.reverse(list);
         currentPositionOnList = list.size();
-        if (currentPlay!= null) {
+        if (currentPlay != null) {
             list.addLast(currentPlay);
         }
         list.addAll(list.size(), history);
@@ -86,9 +88,8 @@ public class ListManager {
                 willBePlayed = createRandomSongsList();
                 break;
             }
-            case INDEX_RANDOM: {
-                willBePlayed = createRandomSongsList();
-                //todo in future
+            case PLAYED_TIMES: {
+                willBePlayed = createPlayedTimesSongsList();
                 break;
             }
         }
@@ -136,6 +137,41 @@ public class ListManager {
         }
     }
 
+    private LinkedList<Track> createPlayedTimesSongsList() {
+        if (allTracks.size() == 0) {
+            return new LinkedList<>();
+        } else {
+            Log.d(TAG, "createPlayedTimesSongsList: size = "+allTracks.size());
+            NavigableMap<Double, Track> map = generateWeightMap();
+            double sum = getTheHighestKey(map);
+            Random random = new Random(System.currentTimeMillis());
+            LinkedList<Track> list = new LinkedList<>();
+            Log.d(TAG, "createPlayedTimesSongsList: "+sum);
+            for (int i = 0; i < NUMBER_OF_NEXT_SONGS; ++i) {
+                list.addLast(map.higherEntry(random.nextDouble()*sum).getValue());
+            }
+            return list;
+        }
+    }
+
+    private NavigableMap<Double, Track> generateWeightMap(){
+        double sqrtNumberOfTracks = Math.sqrt(allTracks.size());
+        double decreaser = 1.0 / (1.0 + Math.exp(-(1.0 / sqrtNumberOfTracks) * (-sqrtNumberOfTracks * 2.0)));
+        NavigableMap<Double, Track> map = new TreeMap<>();
+        double sum = 0.0;
+        for (int i = 0; i < allTracks.size(); ++i) {
+            double value = 1.0 / (1.0 + Math.exp(-(1.0 / sqrtNumberOfTracks) * (allTracks.get(i).getPlayedTimes() - sqrtNumberOfTracks * 2.0)));
+            sum += (value - decreaser)*sqrtNumberOfTracks + 1.0;
+            map.put(sum, allTracks.get(i));
+            Log.d(TAG, "generateWeightMap: "+sum);
+        }
+        return map;
+    }
+
+    private double getTheHighestKey(NavigableMap<Double, Track> map){
+        return map.lowerKey(Double.MAX_VALUE);
+    }
+
     public void setNext(Mode mode) {
         addTrackToHistory(currentPlay);
         currentPlay = willBePlayed.getFirst();
@@ -162,9 +198,8 @@ public class ListManager {
                     addNextLastTrackRandom();
                     break;
                 }
-                case INDEX_RANDOM: {
-                    addNextLastTrackRandom();
-                    //todo in future
+                case PLAYED_TIMES: {
+                    addNextLastTrackPlayedTimes();
                     break;
                 }
             }
@@ -187,6 +222,15 @@ public class ListManager {
         Random random = new Random(System.currentTimeMillis());
         if (allTracks.size() != 0) {
             willBePlayed.addLast(allTracks.get(random.nextInt(allTracks.size())));
+        }
+    }
+
+    private void addNextLastTrackPlayedTimes(){
+        if (allTracks.size() != 0) {
+            NavigableMap<Double, Track> map = generateWeightMap();
+            double sum = getTheHighestKey(map);
+            Random random = new Random(System.currentTimeMillis());
+            willBePlayed.addLast(map.higherEntry(random.nextDouble()*sum).getValue());
         }
     }
 
@@ -233,8 +277,8 @@ public class ListManager {
         return allTracks;
     }
 
-    public void incrementCurrentPlayedTimes(){
-        Log.d(TAG, "incrementCurrentPlayedTimes: "+currentPlay);
+    public void incrementCurrentPlayedTimes() {
+        Log.d(TAG, "incrementCurrentPlayedTimes: " + currentPlay);
         currentPlay.incrementPlayedTimes();
         dataBaseLackey.updateCountOfPlayed(dataBaseLackey.getWritableDatabase(), currentPlay.getData(), currentPlay.getPlayedTimes());
     }
