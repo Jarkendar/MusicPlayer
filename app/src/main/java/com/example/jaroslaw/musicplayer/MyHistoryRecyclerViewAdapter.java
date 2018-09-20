@@ -40,8 +40,8 @@ public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistory
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.track = tracks.get(position);
-        holder.titleText.setText(tracks.get(position).getTitle());
-        holder.artistText.setText(tracks.get(position).getArtist());
+        holder.titleText.setText(prepareStringToDisplay(tracks.get(position).getTitle()));
+        holder.artistText.setText(prepareStringToDisplay(tracks.get(position).getArtist()));
         holder.durationText.setText(tracks.get(position).getDuration());
         Log.d("*****", "onBindViewHolder: "+position+" "+player.getCurrentPositionOnList()+" "+tracks.size()+" "+holder.mView.getBackground().toString());
         if (position == player.getCurrentPositionOnList() && player.getCurrentPositionOnList() == tracks.size() - 1) {
@@ -67,6 +67,14 @@ public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistory
         }else {
             holder.setBackground(R.color.colorOrange);
         }
+    }
+
+    private String prepareStringToDisplay(String string){
+        int maxLength = 50;
+        if (string.length() > maxLength){
+            string = string.substring(0,maxLength)+"...";
+        }
+        return string;
     }
 
     public void setTracks(List<Track> tracks) {
