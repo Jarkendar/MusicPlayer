@@ -173,10 +173,10 @@ public class Player extends Observable implements IPlayer {
                     break;
                 }
                 case RANDOM: {
-                    mode = Mode.INDEX_RANDOM;
+                    mode = Mode.PLAYED_TIMES;
                     break;
                 }
-                case INDEX_RANDOM: {
+                case PLAYED_TIMES: {
                     mode = Mode.QUEUE;
                     break;
                 }
