@@ -108,6 +108,12 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
         mayReadMusicFiles();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        player.getListManager().saveCurrentState();
+    }
+
     private void mayReadMusicFiles() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             refreshTrackFragment();
@@ -386,6 +392,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Pla
             }
         }
     }
+
+
 
     private class BaseRefresher extends AsyncTask<List<Track>, Void, Void> {
         @Override

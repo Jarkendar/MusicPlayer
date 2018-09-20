@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 public class LauncherActivity extends Activity {
 
-    private static final long DISPLAY_TIME = 1000;
+    private static final long DISPLAY_TIME = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
