@@ -29,6 +29,7 @@ public class DataBaseLackey extends SQLiteOpenHelper {
     private static final String FIELD_DISPLAY_NAME = "DISPLAY_NAME";
     private static final String FIELD_DURATION = "DURATION";
     private static final String FIELD_COUNT_OF_PLAYED = "COUNT_OF_PLAYED";
+    private static final String FIELD_FAVORITE = "FAVORITE";
 
     private static final String TABLE_STATE = "TABLE_STATE";
     private static final String FIELD_STATE = "STATE";
@@ -41,6 +42,9 @@ public class DataBaseLackey extends SQLiteOpenHelper {
 
     private static final String INDEX_ON_TITLE = "INDEX_ON_TITLE";
     private static final String INDEX_ON_DATA = "INDEX_ON_DATA";
+
+    private static final int TRUE = 1;
+    private static final int FALSE = 0;
 
     public DataBaseLackey(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -76,7 +80,8 @@ public class DataBaseLackey extends SQLiteOpenHelper {
                     FIELD_DATA + " TEXT UNIQUE, " +
                     FIELD_DISPLAY_NAME + " TEXT NULL, " +
                     FIELD_DURATION + " LONG NOT NULL, " +
-                    FIELD_COUNT_OF_PLAYED + " INTEGER DEFAULT 0 " +
+                    FIELD_COUNT_OF_PLAYED + " INTEGER DEFAULT 0, " +
+                    FIELD_FAVORITE + " INTEGER DEFAULT 0 " +
                     ");";
             sqLiteDatabase.execSQL(tracksCreateQuery);
             Log.d(TAG, "upgradeDataBase: " + tracksCreateQuery);
@@ -140,6 +145,13 @@ public class DataBaseLackey extends SQLiteOpenHelper {
         contentValues.put(FIELD_DURATION, track.getDurationTime());
         sqLiteDatabase.insert(TABLE_TRACKS, null, contentValues);
         Log.d(TAG, "insertTrackToDatabase: " + contentValues);
+    }
+
+    public void updateFavoriteStatusInTrackTable(SQLiteDatabase sqLiteDatabase, Track track){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(FIELD_FAVORITE, track.isFavorite() ? TRUE : FALSE);
+        sqLiteDatabase.update(TABLE_TRACKS, contentValues, FIELD_DATA + "=?", new String[] {track.getData()});
+        Log.d(TAG, "updateFavoriteStatusInTrackTable: "+contentValues + " " +track);
     }
 
     private void deleteTrackFromDatabase(SQLiteDatabase sqLiteDatabase, String data) {
@@ -218,7 +230,13 @@ public class DataBaseLackey extends SQLiteOpenHelper {
 
     public LinkedList<Track> getAllSavedTrack(SQLiteDatabase sqLiteDatabase) {
         LinkedList<Track> tracks = new LinkedList<>();
-        Cursor cursor = sqLiteDatabase.query(TABLE_TRACKS, new String[]{FIELD_TITLE, FIELD_ARTIST, FIELD_DATA, FIELD_DISPLAY_NAME, FIELD_DURATION, FIELD_COUNT_OF_PLAYED}, null, null, null, null, FIELD_TITLE);
+        Cursor cursor = sqLiteDatabase.query(TABLE_TRACKS,
+                new String[]{FIELD_TITLE, FIELD_ARTIST, FIELD_DATA, FIELD_DISPLAY_NAME, FIELD_DURATION, FIELD_COUNT_OF_PLAYED, FIELD_FAVORITE},
+                null,
+                null,
+                null,
+                null,
+                FIELD_TITLE);
         while (cursor.moveToNext()){
             String artist = cursor.getString(cursor.getColumnIndex(FIELD_ARTIST));
             String title = cursor.getString(cursor.getColumnIndex(FIELD_TITLE));
@@ -226,7 +244,8 @@ public class DataBaseLackey extends SQLiteOpenHelper {
             String displayName = cursor.getString(cursor.getColumnIndex(FIELD_DISPLAY_NAME));
             long duration = cursor.getLong(cursor.getColumnIndex(FIELD_DURATION));
             int playedTimes = cursor.getInt(cursor.getColumnIndex(FIELD_COUNT_OF_PLAYED));
-            tracks.addLast(new Track(artist, title, data, displayName, duration, 0, playedTimes));
+            boolean favorite = cursor.getInt(cursor.getColumnIndex(FIELD_FAVORITE)) == 1;
+            tracks.addLast(new Track(artist, title, data, displayName, duration, 0, playedTimes, favorite));
         }
         cursor.close();
         return tracks;
