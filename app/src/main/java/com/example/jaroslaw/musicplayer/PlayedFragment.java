@@ -203,6 +203,14 @@ public class PlayedFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClickFavoriteCurrent: ");
+                if (playerIsAvailable()){
+                    player.getListManager().changeCurrentFavorite();
+                    if (player.getListManager().getCurrentPlay().isFavorite()){
+                        ((ImageButton) view).setImageResource(R.drawable.ic_music_note_quarter_red_24dp);
+                    }else {
+                        ((ImageButton) view).setImageResource(R.drawable.ic_music_note_half_white_24dp);
+                    }
+                }
             }
         });
     }
@@ -301,12 +309,19 @@ public class PlayedFragment extends Fragment {
                 current.setBackground(getActivity().getDrawable(R.drawable.current_background_end));
                 previous.setBackground(null);
             }
+            favoriteButton.setVisibility(View.VISIBLE);
+            if (player.getListManager().getCurrentPlay() != null && player.getListManager().getCurrentPlay().isFavorite()){
+                favoriteButton.setImageResource(R.drawable.ic_music_note_quarter_red_24dp);
+            }else {
+                favoriteButton.setImageResource(R.drawable.ic_music_note_half_white_24dp);
+            }
         } else {
             next3.setBackground(null);
             next2.setBackground(null);
             next.setBackground(null);
             current.setBackground(null);
             previous.setBackground(null);
+            favoriteButton.setVisibility(View.INVISIBLE);
         }
     }
 }

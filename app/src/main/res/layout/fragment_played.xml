@@ -336,7 +336,8 @@
                     android:src="@drawable/ic_music_note_half_white_24dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:visibility="invisible"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
             </android.support.constraint.ConstraintLayout>
 
