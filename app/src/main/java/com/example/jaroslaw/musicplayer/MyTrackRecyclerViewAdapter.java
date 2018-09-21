@@ -77,6 +77,12 @@ public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecy
             artistText = view.findViewById(R.id.item_artist);
             durationText = view.findViewById(R.id.item_duration);
             favoriteButton = view.findViewById(R.id.favorite_button);
+            favoriteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d("****", "onClickFavorite: "+getAdapterPosition());
+                }
+            });
             this.context = context;
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

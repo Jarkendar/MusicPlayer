@@ -36,7 +36,7 @@ public class PlayedFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private ImageButton playButton, nextButton, previousButton, repeatButton, modeButton;
+    private ImageButton playButton, nextButton, previousButton, repeatButton, modeButton, favoriteButton;
     private TextView[] titles = new TextView[5];
     private TextView[] artists = new TextView[5];
     private TextView[] durations = new TextView[5];
@@ -96,6 +96,7 @@ public class PlayedFragment extends Fragment {
         currentTime = view.findViewById(R.id.currentTime_text);
         durationTime = view.findViewById(R.id.currentDuration_text);
         songProgressBar = view.findViewById(R.id.songProgress_bar);
+        favoriteButton = view.findViewById(R.id.favorite_current_button);
     }
 
     private void setButtonListeners() {
@@ -196,6 +197,12 @@ public class PlayedFragment extends Fragment {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 currentTime.setTypeface(null, Typeface.NORMAL);
+            }
+        });
+        favoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClickFavoriteCurrent: ");
             }
         });
     }
