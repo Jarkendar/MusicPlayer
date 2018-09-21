@@ -70,7 +70,7 @@ public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistory
     }
 
     private String prepareStringToDisplay(String string){
-        int maxLength = 50;
+        int maxLength = 40;
         if (string.length() > maxLength){
             string = string.substring(0,maxLength)+"...";
         }

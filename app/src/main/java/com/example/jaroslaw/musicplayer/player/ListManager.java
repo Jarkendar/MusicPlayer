@@ -258,6 +258,11 @@ public class ListManager {
         dataBaseLackey.updateFavoriteStatusInTrackTable(dataBaseLackey.getWritableDatabase(), currentPlay);
     }
 
+    public void changeFavoriteForTrack(Track track){
+        track.setFavorite(!track.isFavorite());
+        dataBaseLackey.updateFavoriteStatusInTrackTable(dataBaseLackey.getWritableDatabase(), track);
+    }
+
     public Track getCurrentPlay() {
         return currentPlay;
     }

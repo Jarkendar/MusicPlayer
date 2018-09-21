@@ -42,10 +42,15 @@ public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecy
         holder.titleText.setText(prepareStringToDisplay(tracks.get(position).getTitle()));
         holder.artistText.setText(prepareStringToDisplay(tracks.get(position).getArtist()));
         holder.durationText.setText(tracks.get(position).getDuration());
+        if (holder.track.isFavorite()){
+            holder.favoriteButton.setImageResource(R.drawable.ic_music_note_quarter_red_24dp);
+        }else {
+            holder.favoriteButton.setImageResource(R.drawable.ic_music_note_half_white_24dp);
+        }
     }
 
     private String prepareStringToDisplay(String string){
-        int maxLength = 50;
+        int maxLength = 40;
         if (string.length() > maxLength){
             string = string.substring(0,maxLength)+"...";
         }
@@ -81,6 +86,12 @@ public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecy
                 @Override
                 public void onClick(View view) {
                     Log.d("****", "onClickFavorite: "+getAdapterPosition());
+                    player.getListManager().changeFavoriteForTrack(track);
+                    if (track.isFavorite()){
+                        favoriteButton.setImageResource(R.drawable.ic_music_note_quarter_red_24dp);
+                    }else {
+                        favoriteButton.setImageResource(R.drawable.ic_music_note_half_white_24dp);
+                    }
                 }
             });
             this.context = context;
