@@ -9,6 +9,7 @@ public class Track {
     private long durationTime;
     private long currentDuration;
     private int playedTimes;
+    private boolean favorite;
 
     public Track(String artist, String title, String data, String displayName, long duration) {
         this.artist = artist;
@@ -24,9 +25,10 @@ public class Track {
         this.currentDuration = currentDuration;
     }
 
-    public Track(String artist, String title, String data, String displayName, long duration, long currentDuration, int playedTimes) {
+    public Track(String artist, String title, String data, String displayName, long duration, long currentDuration, int playedTimes, boolean favorite) {
         this(artist, title, data, displayName, duration, currentDuration);
         this.playedTimes = playedTimes;
+        this.favorite = favorite;
     }
 
     public String getArtist() {
@@ -69,6 +71,14 @@ public class Track {
         playedTimes++;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
     @Override
     public String toString() {
         return "Track{" +
@@ -80,6 +90,7 @@ public class Track {
                 ", durationTime=" + durationTime +
                 ", currentDuration=" + currentDuration +
                 ", playedTimes=" + playedTimes +
+                ", favorite=" + favorite +
                 '}';
     }
 }
