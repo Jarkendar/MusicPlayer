@@ -1,6 +1,8 @@
 package com.example.jaroslaw.musicplayer;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -69,12 +71,24 @@ public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistory
         }
     }
 
-    private String prepareStringToDisplay(String string){
-        int maxLength = 40;
-        if (string.length() > maxLength){
-            string = string.substring(0,maxLength)+"...";
-        }
-        return string;
+    private String prepareStringToDisplay(String sequence) {
+        double maxLength = 240.0;
+        int cutLetter = -1;
+        String text;
+        do {
+            ++cutLetter;
+            text = sequence.substring(0, sequence.length() - cutLetter);
+        } while (calculateWidth(text) > maxLength);
+        return cutLetter == 0 ? text : text.trim() + "...";
+    }
+
+
+    private double calculateWidth (String text) {
+        Rect bounds = new Rect();
+        TextView textView = new TextView(context);
+        textView.getPaint().getTextBounds(text, 0, text.length(), bounds);
+        double length = bounds.width();
+        return length / Resources.getSystem().getDisplayMetrics().scaledDensity;
     }
 
     public void setTracks(List<Track> tracks) {
