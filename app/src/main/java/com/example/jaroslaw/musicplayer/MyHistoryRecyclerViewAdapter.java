@@ -42,8 +42,9 @@ public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistory
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.track = tracks.get(position);
-        holder.titleText.setText(prepareStringToDisplay(tracks.get(position).getTitle()));
-        holder.artistText.setText(prepareStringToDisplay(tracks.get(position).getArtist()));
+        double maxLength = holder.titleText.getMeasuredWidth()/Resources.getSystem().getDisplayMetrics().scaledDensity - 35.0;
+        holder.titleText.setText(prepareStringToDisplay(tracks.get(position).getTitle(),maxLength));
+        holder.artistText.setText(prepareStringToDisplay(tracks.get(position).getArtist(), maxLength));
         holder.durationText.setText(tracks.get(position).getDuration());
         Log.d("*****", "onBindViewHolder: "+position+" "+player.getCurrentPositionOnList()+" "+tracks.size()+" "+holder.mView.getBackground().toString());
         if (position == player.getCurrentPositionOnList() && player.getCurrentPositionOnList() == tracks.size() - 1) {
@@ -71,8 +72,7 @@ public class MyHistoryRecyclerViewAdapter extends RecyclerView.Adapter<MyHistory
         }
     }
 
-    private String prepareStringToDisplay(String sequence) {
-        double maxLength = 240.0;
+    private String prepareStringToDisplay(String sequence, double maxLength) {
         int cutLetter = -1;
         String text;
         do {

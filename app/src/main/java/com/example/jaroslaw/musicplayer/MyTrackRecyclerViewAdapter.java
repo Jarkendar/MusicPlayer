@@ -41,8 +41,9 @@ public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecy
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.track = tracks.get(position);
-        holder.titleText.setText(prepareStringToDisplay(tracks.get(position).getTitle()));
-        holder.artistText.setText(prepareStringToDisplay(tracks.get(position).getArtist()));
+        double maxLength = holder.titleText.getMeasuredWidth()/Resources.getSystem().getDisplayMetrics().scaledDensity - 35.0;
+        holder.titleText.setText(prepareStringToDisplay(tracks.get(position).getTitle(), maxLength));
+        holder.artistText.setText(prepareStringToDisplay(tracks.get(position).getArtist(), maxLength));
         holder.durationText.setText(tracks.get(position).getDuration());
         if (holder.track.isFavorite()){
             holder.favoriteButton.setImageResource(R.drawable.ic_music_note_quarter_red_24dp);
@@ -51,8 +52,7 @@ public class MyTrackRecyclerViewAdapter extends RecyclerView.Adapter<MyTrackRecy
         }
     }
 
-    private String prepareStringToDisplay(String sequence) {
-        double maxLength = 240.0;
+    private String prepareStringToDisplay(String sequence, double maxLength) {
         int cutLetter = -1;
         String text;
         do {
